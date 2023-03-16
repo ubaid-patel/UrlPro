@@ -1,0 +1,62 @@
+.settingsCard{
+    margin: auto;
+    width: 90%;
+    background-color: rgba(223, 224, 224, 0.488);
+    padding: 5px;
+    border-radius: 10px;
+    margin-top: 50px;
+}
+.settingsCard input{
+    border: none;
+    outline: none;
+    border-bottom: 1px solid;
+    margin-right: 20px;
+    max-width: 100%;
+    min-width: 300px;
+    background-color: #00000000;
+}
+.settingsCard button{
+    display: block;
+}
+::placeholder{
+    background-color: #00000000;
+}
+.settingsBtn{
+    margin-top: 20px;
+    height: 25px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 17px;
+}
+.cng{
+    background-color: rgba(39, 80, 40, 0.775);
+}
+.del{
+    background-color: rgba(255, 84, 84, 0.8);
+}
+@media only screen and (max-width: 600px) {
+    .secinp{
+        margin-top: 20px;
+    }
+    .settingsCard input{
+        width: 70%;
+    }
+    .settingsCard{
+        padding-left: 20px;
+    }
+}
+.settingsCard textarea{
+    background-color: #ffffff;
+    display: block;
+    max-width: 90%;
+    border-radius: 10px;
+    
+}
+hr{
+    max-width: 90%;
+    margin-left: 0px;
+}
+.settingsCard{
+    padding-bottom: 20px;
+}

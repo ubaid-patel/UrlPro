@@ -1,0 +1,52 @@
+h1{
+    text-align: center;
+}
+.DashCards{
+        padding: 20px;
+        width: 35%;
+        min-height: 150px;
+        height: auto;
+        background-color: #e5ebfc7c;
+        margin: auto;
+        border-radius: 20px;
+        box-shadow: 0 8px 13px 5px rgba(86, 86, 86, 0.819);
+        margin-top: 50px;
+        transition: .3s;
+}
+.DashCards:hover{
+    transform: scale(1.05);
+}
+.infoCard{
+    position: relative;
+    width: 98%;
+    padding: 5px;
+    padding-left: 20px;
+    margin: auto;
+    overflow: hidden;
+    max-height: 0px;
+    border-radius: 10px;
+    font-size: medium;
+    text-align: left;
+    transition: max-height .3s ease-in-out;
+
+}
+.infoCard h3{
+    margin: 0px;
+    text-align: left;
+    margin-top: 5px;
+}
+.infoCardAminate {
+    border: 1px solid;
+    max-height: 350px;
+  }
+
+hr{
+    color: black;
+}
+.infoclose{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    filter: invert(1);
+    background-color:rgb(4, 55, 100);
+}
