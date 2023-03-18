@@ -11,6 +11,9 @@ function DashBoard(){
         cont.classList.add("visible")
     })
     let Nav = useNavigate();
+    if(GetAuth().status === 0){
+        Nav("/")
+    }
     const[num,refresh] = useState(0);
     const[alllinks,setLinks]=useState([]);
     let links = GetAuth().links; ;

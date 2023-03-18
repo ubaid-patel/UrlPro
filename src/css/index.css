@@ -18,6 +18,33 @@
         transform: scale(1);
     }
 }
+
+.Loader {
+    margin: auto;
+    width: 15vw;
+    height: 15vw;
+    border-radius: 50%;
+    margin-top: 100px;
+    border: 10px solid black;
+    border-right-color: rgba(255, 255, 255, 0);
+    background-color: rgba(234, 234, 234, 0);
+    animation: loader 1s infinite linear;
+    box-sizing: border-box; /* added to account for border width in width/height */
+  }
+  .hide{
+    display: none;
+  }
+
+  @keyframes loader {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+
 .statusBar{
     max-width: 0px;
     height: 3px;
@@ -114,6 +141,11 @@
 }
 #User_Circle_1_{
     fill: rgb(255, 255, 255);
+}
+#userPicture{
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
 }
 #logo{
     display: inline-block;
@@ -514,6 +546,18 @@ li{
     margin: 0px;
 }
 @media only screen and (max-width: 600px) {
+    .Loader {
+        margin: auto;
+        width: 40vw;
+        height: 40vw;
+        border-radius: 50%;
+        margin-top: 100px;
+        border: 12px solid black;
+        border-right-color: rgba(255, 255, 255, 0);
+        background-color: rgba(234, 234, 234, 0);
+        animation: loader 1s infinite linear;
+        box-sizing: border-box; /* added to account for border width in width/height */
+      }
     @keyframes expand{
         0%{
             max-width: 50px

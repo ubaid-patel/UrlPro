@@ -1,12 +1,13 @@
 import React, { useState,useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { json, Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { SignupUser,sendOTP } from './ApiCalls';
+import { SignupUser,sendOTP, GoogleSignin } from './ApiCalls';
 import { displayOneByOne } from './AppConfig';
 import { useGoogleLogin } from '@react-oauth/google';
 import { GoogleLogin } from '@react-oauth/google';
+import { LoginSocialGoogle } from 'reactjs-social-login';
 
-const clientId = "679480088996-tilrerpurr8qh56gc08por5q5tdvns3t.apps.googleusercontent.com";
+const clientId = "679480088996-jptefnvqmp7a7qfrab6frjoq4f3nkn64.apps.googleusercontent.com";
 const scope = "https://www.googleapis.com/auth/userinfo.profile";
 
 const Signup = () => {
@@ -16,7 +17,9 @@ const Signup = () => {
       let cont = document.getElementsByClassName("MainCont")[0] ;
       cont.classList.add("visible")
   })
-  const GoogleSignup = useGoogleLogin({  onSuccess: tokenResponse => console.log(tokenResponse)})
+  const GoogleSignup = ()=>{
+
+  }
   function sendOtp(e){
     let form = new FormData(e.target);
     setEmail(form.get("email"))
@@ -85,16 +88,37 @@ const Signup = () => {
           <button type="submit" className="Button submitBtn">Signup</button>
       </form>
       <Link to="/login" className='Links' style={{marginTop:"10px"}}>Already have an account? Login</Link>
-      <div id="googleLogin" onClick={(e)=>{e.preventDefault();GoogleSignup()}}><img src="/static/google.svg"/> Signup with google</div>
-      
-<GoogleLogin
-onSuccess={(credentialResponse) => {
-  console.log(credentialResponse);
-}}
-onError={() => {
-  console.log('Login Failed');
-}}
-/>
+      <LoginSocialGoogle
+      client_id={'1073579154631-nr0b438d5sqljlqfjkiev25ujshf3cs2.apps.googleusercontent.com'}
+      scope='openid profile email'
+      discoveryDocs='claims_supported'
+      access_type='offline'
+      typeResponse='accessToken'
+      onResolve={(response)=>{
+        // console.log(response)
+        GoogleSignin(response.data.access_token).then(
+          (data)=>{
+            localStorage.setItem("Auth",JSON.stringify(data))
+            setTimeout(()=>{
+              localStorage.removeItem("Loading")
+              nav("/Dashboard")
+            },300)
+          },
+          (message)=>{
+            alert(message)
+          }
+        )
+      }}
+      onReject={(err)=>{
+        console.log(err)
+      }}
+      onLoginStart={()=>{
+        localStorage.setItem("Loading","true")
+        nav('/Loading')
+      }}
+      >
+        <div id="googleLogin"><img src="/static/google.svg"/> Continue with google</div>
+      </LoginSocialGoogle>
       </div>
       <div className='forms' id="verify" style={{display:"none"}}>
       <p id="SignupResult"></p>

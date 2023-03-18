@@ -153,7 +153,7 @@ function SignupUser(data){
             auth.token = response.token;
             auth.status = 1;
             auth.name = response.name;
-            localStorage.setItem("Auth",JSON.stringify(auth))
+            localStorage.setItem("Auth",JSON.stringify(response))
             resolve(response.message)
         }else{
             reject(response.message)
@@ -244,4 +244,23 @@ function SendFeedback(message){
         xhr.send();
     }))
 }
-export {CreateLink,LoginUser,saveChanges,DeleteLink,changePassword,ForgpotPassword,SignupUser,sendOTP,changeName,deleteAccount,SendFeedback}
+
+function GoogleSignin(accessToken) {
+    return new Promise((resolve, reject) => {
+    let xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+    xhr.addEventListener("readystatechange", function() {
+    if(this.readyState === 4) {
+        if(this.status === 200){
+            resolve(JSON.parse(this.responseText))
+        }else{
+            reject(this.responseText)
+        }
+    }
+    });
+    xhr.open("GET", GetHost()+"GoogleSignin?accessToken="+accessToken);
+    xhr.send();
+    })
+  }
+  
+export {CreateLink,LoginUser,saveChanges,DeleteLink,changePassword,GoogleSignin,ForgpotPassword,SignupUser,sendOTP,changeName,deleteAccount,SendFeedback}

@@ -14,10 +14,12 @@ import LogoutUser from './Logout';
 import DashBoard from './DashBoard';
 import Settings from './Settings';
 import Feedback from './Feedback';
-import { GoogleOAuthProvider } from '@react-oauth/google';
+import Loading from './Loading';
 const routes = createBrowserRouter([
   {path:"",element:<><TopNav/><Home/></>},
   {path:"/login",element:<><TopNav/><Login/></>},
+  {path:"/Loading",element:<><TopNav/><Loading/></>},
+  {path:"/Loading",element:<><TopNav/><Login/></>},
   {path:"/Dashboard",element:<><TopNav/><DashBoard/></>},
   {path:"/Settings",element:<><TopNav/><Settings/></>},
   {path:"/Feedback",element:<><TopNav/><Feedback/></>},
@@ -30,9 +32,7 @@ const routes = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <GoogleOAuthProvider clientId='679480088996-tilrerpurr8qh56gc08por5q5tdvns3t.apps.googleusercontent.com'>
       <RouterProvider router={routes} />
-    </GoogleOAuthProvider>
   </React.StrictMode>
 );
 // If you want to start measuring performance in your app, pass a function
