@@ -2,7 +2,7 @@ function GetHost(){
     return "http://192.168.43.160:5000/"
 }
 function GetAuth(){
-    let Auth = {status:0,token:"token",links:[]}
+    let Auth = {status:0,token:null,links:[]}
     try {
         return JSON.parse(localStorage.Auth)
       } catch (e) {

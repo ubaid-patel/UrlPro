@@ -29,7 +29,7 @@ const ForgotPassword = () => {
         if(stage === 1){
           sendOTP(data.get("email"),1).then(
             (response)=>{
-              displayOneByOne(response.message,"loginResult",40,(response.status === 1)?"success":"failed")
+              displayOneByOne(response.message,"loginResult",40,"success")
               emailinp.setAttribute("disabled",true)
               passinp.removeAttribute("disabled");
               otpinp.removeAttribute("disabled");
@@ -53,10 +53,20 @@ const ForgotPassword = () => {
           submitbtn.setAttribute("disabled",true)
           ForgpotPassword(emailinp.value,passinp.value,otpinp.value).then(
             (response)=>{
-              displayOneByOne(response.message,"loginResult",40,"success")
+              displayOneByOne(response.message,"loginResult",40,"success").then(
+               ()=>{
+                setTimeout(()=>{
+                  Nav("/login")
+                },300)
+               }
+              )
             },
             (response)=>{
-              displayOneByOne(response.message,"loginResult",40,"failed")
+              if(response.status === 404){
+                displayOneByOne(response.message,"loginResult",40,"failed")
+              }else{
+                displayOneByOne(response.message,"loginResult",40,"failed")
+              }
             }
           ).finally(()=>{
             document.getElementById("btnloader").style="display:none;";

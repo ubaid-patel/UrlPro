@@ -17,24 +17,16 @@ const Signup = () => {
       let cont = document.getElementsByClassName("MainCont")[0] ;
       cont.classList.add("visible")
   })
-  const GoogleSignup = ()=>{
 
-  }
   function sendOtp(e){
     let form = new FormData(e.target);
     setEmail(form.get("email"))
     const emailcheck = /^[a-zA-Z0-9._%+-]+@(gmail|outlook|yahoo|icloud|aol|protonmail|zoho|mail|gmx|fastmail)\.(com|net|org|edu|gov|mil|info|biz|co|uk)$/i
     if(emailcheck.test(form.get("email"))){
-      sendOTP(form.get("email"),0).then(
-        (response)=>{
-          if(response.status === 1){
-            displayOneByOne(response.message,"SignupResult",40,"success")
-          }else{
-            displayOneByOne(response.message,"SignupResult",40,"failed")
-          }
-        }
-      )
-    }else{
+        sendOTP(form.get("email"),0).then(
+          (response)=>{displayOneByOne(response.message,"SignupResult",40,"success")},
+          (response)=>{displayOneByOne(response.message,"SignupResult",40,"failed")})
+      }else{
         displayOneByOne("Mail provider not supported","SignupResult",40,"failed")
       }  
     document.getElementById("form").classList.toggle("sendotpanimate")
@@ -73,6 +65,7 @@ const Signup = () => {
     <div className="statusBar statusBarRun"></div>
     <div className="MainCont">
     <div className='forms addanim' id="form">
+    <p id="GoogleResult"></p>
       <form method="post" onSubmit={(e) => { e.preventDefault(); sendOtp(e) }}>
         <input required type="text" id="nameInput" name="name" placeholder="Full name" className="inputText" /><br/>
         <input required type="email" id="emailInput" name="email" placeholder="Email" className="inputText"/><br/>
@@ -105,7 +98,9 @@ const Signup = () => {
             },300)
           },
           (message)=>{
-            alert(message)
+            localStorage.removeItem("Loading")
+              nav("/signup")
+              displayOneByOne(message,"GoogleResult",40,"failed")
           }
         )
       }}

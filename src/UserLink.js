@@ -1,5 +1,7 @@
+import { useNavigate } from "react-router-dom";
 import { DeleteLink, saveChanges } from "./ApiCalls";
 function UserLink({link,deleteLink}){
+    const nav = useNavigate();
     var isCopied = false;
     function copyLink(endpoint){
         var input = document.createElement('input');
@@ -105,19 +107,24 @@ function UserLink({link,deleteLink}){
                         let title = document.getElementById("inputTitle"+link.endpoint).value;
                         let url = document.getElementById("inputUrl"+link.endpoint).value;
                         saveChanges(link.endpoint,title,url).then(
-                            (value)=>{
+                            (response)=>{
                                 document.getElementById("inputTitle"+link.endpoint).setAttribute("disabled",true)
-                    document.getElementById("inputUrl"+link.endpoint).setAttribute("disabled",true)
-                     let btns = document.getElementsByClassName("menu"+link.endpoint);
-                     for(let i = 0;i< btns.length;i++){
-                        btns[i].classList.toggle("hide") 
-                     }
-                     let editbtns = document.getElementsByClassName("edit"+link.endpoint);
-                     for(let i = 0;i< btns.length;i++){
-                         editbtns[i].classList.toggle("hide") 
-                     }
-                            },
-                            (value)=>{alert("rejected"+value)}
+                                document.getElementById("inputUrl"+link.endpoint).setAttribute("disabled",true)
+                                let btns = document.getElementsByClassName("menu"+link.endpoint);
+                                for(let i = 0;i< btns.length;i++){
+                                    btns[i].classList.toggle("hide") 
+                                }
+                                let editbtns = document.getElementsByClassName("edit"+link.endpoint);
+                                for(let i = 0;i< btns.length;i++){
+                                    editbtns[i].classList.toggle("hide") 
+                                }},
+                            (response)=>{
+                                if(response.status === 401){
+                                    nav("/SessionExpired")
+                                }else{
+                                    console.log(response)
+                                }
+                            }
                         )
                     }}>
                             <img src="/static/save.png" />
@@ -259,7 +266,13 @@ function UserLink({link,deleteLink}){
                          editbtns[i].classList.toggle("hide") 
                      }
                             },
-                            (value)=>{alert("rejected"+value)}
+                            (status,message)=>{
+                                if( status === 401){
+                                   nav("/SessionExpired") 
+                                }else{
+                                    console.log(message)
+                                }
+                            }
                         )
                     }}>
                             <img src="/static/save.png" />

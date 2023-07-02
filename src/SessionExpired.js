@@ -3,20 +3,28 @@ import { Link } from 'react-router-dom';
 import { LoginUser,GoogleSignin } from './ApiCalls';
 import { displayOneByOne } from './AppConfig';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect,useState } from 'react';
 import { LoginSocialGoogle } from 'reactjs-social-login';
-const Login = () => {
+
+function SessionExpired(){
   const nav = useNavigate();
+  //iter is just used to make sure we remove auth only once
+  const[iter,setIter] = useState(0);
   useEffect(()=>{
-      let cont = document.getElementsByClassName("MainCont")[0] ;
-      cont.classList.add("visible")
-  })
-  let Nav = useNavigate();
-  return (
+    setIter(iter+1)
+    if(iter == 1){
+      alert("Removed")
+    localStorage.removeItem("Auth")
+    }
+  },)
+    let Nav = useNavigate();
+    return(
     <>
     <div className="statusBar statusBarRun"></div>
-    <div className="MainCont">
+    <div className="MainCont visible">
     <div className='forms'>
+    <img src='/static/clock.svg'/>
+    <h4>Session expired please login again</h4>
       <h4 id="loginResult"></h4>
       <form onSubmit={(e)=>{
         e.preventDefault();
@@ -79,8 +87,7 @@ const Login = () => {
       
     </div>
     </div>
-    </>
-  );
-};
-
-export default Login;
+        </>
+    )
+}
+export default SessionExpired;

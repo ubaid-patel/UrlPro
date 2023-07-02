@@ -1,9 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GetAuth } from './AppConfig';
+import { RefreshData } from './ApiCalls';
 import "./css/index.css"
 function TopNav() {
   const navigate = useNavigate();
+  const [num,setNum] = useState(0);
+  useEffect(()=>{
+     
+      setNum(1);
+    if(num == 1){
+      if(localStorage.Auth){
+        alert("old user")
+        navigate("/SessionExpired")
+        RefreshData().then(
+          (data)=>{
+            localStorage.setItem("Auth",JSON.stringify(data))
+            setTimeout(()=>{
+              localStorage.removeItem("Loading")
+            },300)
+            console.log("Data Refreshed")
+          },
+          (message)=>{
+            localStorage.removeItem("Loading")
+            navigate("/SessionExpired")
+            // localStorage.removeItem("Auth")
+            // window.location.href="/SessionExpired"
+          }
+        )
+      }
+    }
+  },[num])
 
   return (
     <>

@@ -1,47 +1,75 @@
 import React from "react";
 import { GetAuth, displayOneByOne,GetHost } from "./AppConfig";
 
+function RefreshData(){
+    let promise = new Promise((resolve,reject)=>{
+            try{
+                let xhr = new XMLHttpRequest();
+                xhr.withCredentials = true;
+                xhr.addEventListener("readystatechange", function() {
+                if(this.readyState === 4) {
+                    let response = JSON.parse(this.responseText);
+                    if(this.status === 200){
+                        resolve(response)
+                    }else{
+                        reject(response)
+                    }
+                }
+                });
+                xhr.open("POST", GetHost()+"RefreshData?token="+GetAuth().token);
+                console.log(GetAuth().token)
+                xhr.send();
+            }catch(error){
+                reject(406,"Invalid Url")
+            }
+    });
+    return(promise)
+}
+
 function CreateLink(data){
+    let url = encodeURIComponent(data.get("url"));
     return(new Promise((resolve,reject)=>{
     try{
-        let url = new URL(data.get("url"))
         let xhr = new XMLHttpRequest();
         xhr.withCredentials = true;
         xhr.addEventListener("readystatechange", function() {
         if(this.readyState === 4) {
             let reponse = JSON.parse(this.responseText);
             let obj = {"url":data.get("url"),"endpoint":reponse.endpoint,"title":data.get("title"),"views":0}
-            resolve(obj)
+            if(this.status === 201){
+                resolve(obj)
+            }else{
+                reject(reponse)
+            }
         }
         });
-        xhr.open("POST", GetHost()+"createLink?url="+data.get("url")+"&title="+data.get("title")+"&token="+GetAuth().token);
+        xhr.open("POST", GetHost()+"createLink?url="+url+"&title="+data.get("title")+"&token="+GetAuth().token);
         xhr.send();
     }catch(error){
-        reject("Invalid Url")
+        reject(406,"Invalid Url")
     }
     }))
 }
 
-function LoginUser(email,password,nav){
+function LoginUser(email,password){
 let xhr = new XMLHttpRequest();
-xhr.withCredentials = true;
-xhr.addEventListener("readystatechange", function() {
-  if(this.readyState === 4) {
-    let response = JSON.parse(this.responseText);
-    document.getElementById("btnloader").style="display:none;";
-    if(response.status === 1){
-        localStorage.setItem("Auth",JSON.stringify(response))
-        displayOneByOne(response.message,"loginResult",40,"success").then(()=>{
-            setTimeout(()=>{nav("/Dashboard")},500)
-        })
-        
-    }else{
-        displayOneByOne(response.message,"loginResult",40,"failed")
+return new Promise(
+    (resolve,reject)=>{
+        xhr.withCredentials = true;
+        xhr.addEventListener("readystatechange", function() {
+        if(this.readyState === 4) {
+            let response = JSON.parse(this.responseText);
+            if(this.status === 200){
+                resolve(response)
+            }else{
+                reject(response)
+            }
+        }
+        });
+        xhr.open("POST", GetHost()+"login?email="+email+"&password="+password);
+        xhr.send();
     }
-  }
-});
-xhr.open("POST", GetHost()+"login?email="+email+"&password="+password);
-xhr.send();
+)
 }
 
 
@@ -61,15 +89,14 @@ function saveChanges(endpoint,title,url){
                 }
             });
             localStorage.setItem("Auth",JSON.stringify(auth))
-
-            if(response.status === 1){
-                resolve(response.message)
+            if(this.status === 202){
+                resolve(response)
             }else{
-                reject(response.message)
+                reject(response)
             }
         }
         });
-        xhr.open("POST", GetHost()+"editLink?token="+GetAuth().token+"&endpoint="+endpoint+"&url="+url+"&title="+title);
+        xhr.open("PUT", GetHost()+"editLink?token="+GetAuth().token+"&endpoint="+endpoint+"&url="+url+"&title="+title);
         xhr.send();
     }))
 }
@@ -81,25 +108,25 @@ async function DeleteLink(endpoint){
   
       xhr.addEventListener("readystatechange", function() {
         if(this.readyState === 4) {
-          let response = JSON.parse(this.responseText);
-          if(response.status === 1){
-            let data = GetAuth();
-            let newarr =[];
-            data.links.forEach((link,index)=>{
-              if(link.endpoint != endpoint){
-                newarr.push(link)
-              }
-            })
-            data.links=newarr;
-            localStorage.setItem("Auth",JSON.stringify(data))
-            resolve(response);
-          } else {
-            reject(response);
-          }
+            let response = JSON.parse(this.responseText);
+            if(this.status === 202){
+                let data = GetAuth();
+                    let newarr =[];
+                    data.links.forEach((link,index)=>{
+                      if(link.endpoint != endpoint){
+                        newarr.push(link)
+                      }
+                    })
+                    data.links=newarr;
+                    localStorage.setItem("Auth",JSON.stringify(data))
+                    resolve(response);
+            }else{
+                reject(response)
+            }
         }
       });
   
-      xhr.open("POST", GetHost() + "delete?token=" + GetAuth().token + "&endpoint=" + endpoint);
+      xhr.open("DELETE", GetHost() + "delete?token=" + GetAuth().token + "&endpoint=" + endpoint);
       xhr.send();
     });
   }
@@ -110,14 +137,15 @@ function changePassword(oldPass,newPass){
         xhr.addEventListener("readystatechange", function() {
         if(this.readyState === 4) {
             let response = JSON.parse(this.responseText);
-            if(response.status === 1){
+            if(this.status === 202){
                 resolve(response)
             }else{
+                console.log(response.message)
                 reject(response)
             }
         }
         });
-        xhr.open("POST", GetHost()+"changepassword?oldPassword="+oldPass+"&token="+GetAuth().token+"&newPassword="+newPass);
+        xhr.open("PUT", GetHost()+"changepassword?oldPassword="+oldPass+"&token="+GetAuth().token+"&newPassword="+newPass);
         xhr.send();
     })
 }
@@ -129,14 +157,14 @@ function ForgpotPassword(email,password,otp){
     xhr.addEventListener("readystatechange", function() {
     if(this.readyState === 4) {
         let response = JSON.parse(this.responseText);
-        if(response.status === 1){
+        if(this.status === 202){
             resolve(response)
         }else{
             reject(response)
         }    
     }
     });
-    xhr.open("POST", GetHost()+"forgotPassword?email="+email+"&password="+password+"&otp="+otp);
+    xhr.open("PUT", GetHost()+"forgotPassword?email="+email+"&password="+password+"&otp="+otp);
     xhr.send();
     })
 }
@@ -148,7 +176,7 @@ function SignupUser(data){
     xhr.addEventListener("readystatechange", function() {
     if(this.readyState === 4) {
         let response = JSON.parse(this.responseText);
-        if(response.status  === 1){
+        if(this.status  === 201){
             let auth = {token:"",status:0,name:"",links:[]}
             auth.token = response.token;
             auth.status = 1;
@@ -173,9 +201,13 @@ async function sendOTP(email,type){
             setTimeout(()=>{
                 if(this.readyState === 4){
                     let response = JSON.parse(this.responseText)
-                    resolve(response)
+                    if(this.status === 201){
+                        resolve(response)
+                    }else{
+                        reject(response)
+                    }
                 }else{
-                    resolve({status:1,message:"OTP sent successfully"})
+                    resolve({message:"OTP sent successfully"})
                 }
             },3000)
             if(this.readyState === 4){
@@ -197,14 +229,14 @@ function changeName(newName){
         xhr.addEventListener("readystatechange", function() {
         if(this.readyState === 4) {
             let response = JSON.parse(this.responseText)
-            if(response.status === 1){
+            if(this.status === 202){
                 resolve(response)
             }else{
                 reject(response)
             }
         }
         });
-        xhr.open("POST", GetHost()+"ChangeName?token="+GetAuth().token+"&newName="+newName);
+        xhr.open("PUT", GetHost()+"ChangeName?token="+GetAuth().token+"&newName="+newName);
         xhr.send();
     }))
 }
@@ -215,7 +247,7 @@ function deleteAccount(password){
         xhr.addEventListener("readystatechange", function() {
         if(this.readyState === 4) {
             let response = JSON.parse(this.responseText)
-            if(response.status === 1){
+            if(this.status === 202){
                 resolve(response)
             }else{
                 reject(response)
@@ -233,7 +265,7 @@ function SendFeedback(message){
         xhr.addEventListener("readystatechange", function() {
         if(this.readyState === 4) {
             let response = JSON.parse(this.responseText)
-            if(response.status === 1){
+            if(this.status === 201){
                 resolve(response)
             }else{
                 reject(response)
@@ -254,7 +286,7 @@ function GoogleSignin(accessToken) {
         if(this.status === 200){
             resolve(JSON.parse(this.responseText))
         }else{
-            reject(this.responseText)
+            reject(JSON.parse(this.responseText))
         }
     }
     });
@@ -263,4 +295,4 @@ function GoogleSignin(accessToken) {
     })
   }
   
-export {CreateLink,LoginUser,saveChanges,DeleteLink,changePassword,GoogleSignin,ForgpotPassword,SignupUser,sendOTP,changeName,deleteAccount,SendFeedback}
+export {CreateLink,RefreshData,LoginUser,saveChanges,DeleteLink,changePassword,GoogleSignin,ForgpotPassword,SignupUser,sendOTP,changeName,deleteAccount,SendFeedback}

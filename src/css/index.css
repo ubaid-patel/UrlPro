@@ -139,6 +139,13 @@
     top:50px;
     z-index: 1;
 }
+#allusers{
+    margin: auto;
+    text-align: center;
+}
+#allusers td{
+    padding: 5px;
+}
 #User_Circle_1_{
     fill: rgb(255, 255, 255);
 }
@@ -545,12 +552,13 @@ li{
     width: 20px;
     margin: 0px;
 }
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 650px) {
     .Loader {
         margin: auto;
         width: 40vw;
         height: 40vw;
         border-radius: 50%;
+        color: #37378f;
         margin-top: 100px;
         border: 12px solid black;
         border-right-color: rgba(255, 255, 255, 0);

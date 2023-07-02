@@ -30,7 +30,13 @@ function Settings(){
                     oldpass.setAttribute("disabled",true)
                     changePassword(oldpass.value,newpass.value).then(
                         (response)=>{displayOneByOne(response.message,"cngpassResult",40,"success")},
-                        (response)=>{displayOneByOne(response.message,"cngpassResult",40,"failed")}
+                        (response)=>{
+                            if(response.status === 401){
+                                nav("/SessionExpired")
+                            }else{
+                                displayOneByOne(response.message,"cngpassResult",40,"failed")
+                            }
+                        }
                     ).finally(()=>{
                         e.target.removeAttribute("disabled")
                         oldpass.removeAttribute("disabled")
@@ -53,7 +59,12 @@ function Settings(){
                             auth.name = name.value;
                             localStorage.setItem("Auth",JSON.stringify(auth))
                             displayOneByOne(response.message,"cngnameResult",40,"success")},
-                        (response)=>{displayOneByOne(response.message,"cngnameResult",40,"failed")}
+                        (response)=>{
+                            if(response.status === 401){
+                                nav("/SessionExpired")
+                            }else{
+                            displayOneByOne(response.message,"cngnameResult",40,"failed")
+                            }}
                     ).finally(()=>{
                         name.removeAttribute("disabled")
                         e.target.removeAttribute("disabled")
@@ -73,7 +84,13 @@ function Settings(){
                         (response)=>{displayOneByOne(response.message,"delacResult",40,"success").then(()=>{
                             nav("/Logout")
                         })},
-                        (response)=>{displayOneByOne(response.message,"delacResult",40,"failed")}
+                        (response)=>{
+                            if(response.status === 401){
+                                nav("/SessionExpired")
+                            }else{
+                                console.log(response)
+                            displayOneByOne(response.message,"delacResult",40,"failed")
+                        }}
                     ).finally(()=>{
                         pass.removeAttribute("disabled")
                         e.target.removeAttribute("disabled")
