@@ -3,35 +3,28 @@ import { Link, useNavigate } from 'react-router-dom';
 import { GetAuth } from './AppConfig';
 import { RefreshData } from './ApiCalls';
 import "./css/index.css"
+import { useDispatch, useSelector } from 'react-redux';
+import { selectAuth, updateAuth } from './reducers/authSlice';
 function TopNav() {
   const navigate = useNavigate();
-  const [num,setNum] = useState(0);
-  useEffect(()=>{
-     
-      setNum(1);
-    if(num == 1){
-      if(localStorage.Auth){
-        alert("old user")
-        navigate("/SessionExpired")
-        RefreshData().then(
-          (data)=>{
-            localStorage.setItem("Auth",JSON.stringify(data))
-            setTimeout(()=>{
-              localStorage.removeItem("Loading")
-            },300)
-            console.log("Data Refreshed")
-          },
-          (message)=>{
-            localStorage.removeItem("Loading")
-            navigate("/SessionExpired")
-            // localStorage.removeItem("Auth")
-            // window.location.href="/SessionExpired"
-          }
-        )
-      }
-    }
-  },[num])
+  const auth = useSelector(selectAuth);
+  const dispatch = useDispatch();
 
+  useEffect(()=>{
+    if(localStorage.Token){
+     RefreshData().then(
+        (data)=>{
+          dispatch(updateAuth(data))
+          localStorage.setItem("Token",data.token)
+        },
+        (message)=>{
+          navigate("/SessionExpired")
+        })
+    }
+  },[])
+  const token = auth.token;
+  const picture = auth.picture;
+  // console.log(auth.token)
   return (
     <>
     <div id="TopNav">
@@ -45,7 +38,7 @@ function TopNav() {
       154L328 122L323 122M337 122L337 127L361 127L361 122L337 122M399 122L399 154C403.997 154 409.003 154.09 413.999 153.995C415.873 153.96 418.675 154.18 419.914 152.416C421.213 150.565 419.61 148.84 417.851 148.318C413.73 147.095 408.279 148 404 148L404 122L399 122M441 122L441 154L446 154L446 122L441 122M464 122C468.494 130.065 474.425 137.44 479.72 145C482.914 149.561 485.126 153.548 491 154L491 122L485 122L485 143C479.669 135.556 474.113 122.331 464 122M497 122L497 154L503 154C503.051 139.602 518.406 133.996 524 122C514.259 122.115 509.424 130.575 503 137L503 122L497 122M560 122L560 127L583 127L583 122L560 122M591 122C593.38 126.274 600.213 132.712 600.418 137.576C600.635 142.707 592.882 149.107 591 154C600.198 153.89 603.28 145.885 608.026 139C611.823 133.492 616.398 128.187 619 122C611.805 122.234 608.903 126.863 606 133C601.17 127.417 598.956 122.095 591 122M627 122L627 127C631.291 127 637.048 126.042 640.941 128.179C644.036 129.878 645.756 133.738 642.677 136.397C639.122 139.468 631.383 138 627 138L627 154L632 154L632 144C636.915 143.986 642.604 144.009 646.786 140.995C652.241 137.063 652.087 128.668 646.891 124.653C641.586 120.553 633.283 122 627 122M661 122L661 127L684 127L684 122L661 122M693 122L693 127C697.788 127 711.146 124.919 712.079 132.025C713.1 139.806 697.294 138 693 138L693 154L699 154L699 143C708.744 143.317 710.037 153.882 720 154C717.468 149.555 714.202 145.633 712 141C719.705 138.237 721.209 128.614 713.956 124.009C708.295 120.415 699.419 122 693 122M727 122C727.76 131.762 745.625 128 753 128L753 122L727 122M463 129C463 136.282 459.334 153.247 469 154C469 144.732 470.442 135.827 463 129M743 154L743 132C741.242 132.137 739.226 132.025 738.023 133.603C736.551 135.535 737.005 138.733 737 141C736.988 146.986 735.526 153.418 743 154M279 133L279 153L284 153L284 133L279 133M337 135L337 140L359 140L359 135L337 135M560 135L560 140L581 140L581 135L560 135M661 135L661 140L682 140L682 135L661 135M514 140C508.813 147.806 517.524 153.911 525 154C522.086 148.935 518.375 143.882 514 140M610 142C606.9 149.486 613.044 153.917 620 154C617.65 149.782 614.809 145.922 612 142L610 142M337 148L337 154L361 154L361 148L337 148M560 148L560 154L583 154L583 148L560 148M661 148L661 154L684 154L684 148L661 148z'/%3E%3C/svg%3E" 
       alt="Logo"/>
       </Link>
-    {(GetAuth().status === 0)?
+    {(token === undefined)?
       <div className='mobNavSlB RightAlign'>
       <button className="RightAlign Button" onClick={() => navigate('/login')}>
         Login
@@ -73,11 +66,11 @@ function TopNav() {
         document.getElementsByClassName("profileMenu")[0].classList.add("hide")
       }}
       >
-      {(GetAuth().picture === null?
+      {(picture === null?
       <svg version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 25 25">
       <path id="User_Circle_1_" d="M12.5,0C5.61,0,0,5.61,0,12.5c0,3.39,1.4,6.68,3.84,9.02c2.19,2.11,5.03,3.31,8.06,3.45 c0.15,0.01,0.31,0.03,0.46,0.03c0.02,0,0.05,0,0.07,0c0.02,0,0.05,0,0.07,0c3.23,0,6.29-1.22,8.63-3.45c2.5-2.39,3.87-5.6,3.87-9.05 C25,5.61,19.39,0,12.5,0z M20.91,20.33c-0.46-1.63-2.64-2.51-4.28-3.16l-0.56-0.23C15,16.5,15,16.09,15,15.5 c0-0.42,0.21-1.02,0.59-1.38c0.97-0.85,1.48-2.02,1.48-3.38C17.07,7.99,15.15,6,12.5,6c-2.64,0-4.48,1.95-4.48,4.74 c0,1.42,0.48,2.56,1.41,3.38c0.39,0.35,0.56,0.96,0.56,1.38c0,0.42,0,0.94-1.3,1.47c-1.6,0.66-3.72,1.56-4.69,3.26 c-1.91-2.11-3-4.88-3-7.73C1,6.16,6.16,1,12.5,1S24,6.16,24,12.5C24,15.44,22.9,18.19,20.91,20.33z"></path>
       </svg>:
-      <img id="userPicture" src={GetAuth().picture}></img>
+      <img id="userPicture" src={picture}></img>
     )}
       </div>
       <div className='profileMenu hide'>

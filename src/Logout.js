@@ -1,25 +1,30 @@
-import { displayOneByOne } from "./AppConfig"
+import { displayOneByOne, initState } from "./AppConfig"
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { updateAuth } from "./reducers/authSlice";
 function LogoutUser(){
-    const [iter,setIter]=useState(0)
     let Nav = useNavigate();
+    const dispatch = useDispatch();
+
     function deleteData(nav){
+    // store.dispatch({type:"REFRESH",payload:{status:0,token:null,links:[]}})
     displayOneByOne("Logout Success","LogoutMsg",45,"failed").then(()=>{
-        localStorage.removeItem("Auth")
-        setTimeout(()=>{nav("/")},600)
+        localStorage.removeItem("Token")
+        setTimeout(()=>{
+            nav("/")
+            dispatch(updateAuth(initState()))
+        },600)
+    }).finally(()=>{
+        setTimeout(()=>{},600)
     })
     }
+
     useEffect(()=>{
-        if(iter === 1){
             let cont = document.getElementsByClassName("MainCont")[0] ;
             cont.classList.add("visible")
             deleteData(Nav)
-        }
-        if(iter < 2){
-            setIter(iter+1)
-        }
-    },[iter])
+        },[])
     return(
     <>
     <div className="statusBar statusBarRun"></div>

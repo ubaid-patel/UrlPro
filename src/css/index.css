@@ -443,43 +443,47 @@ li{
     display: none;
 }
 .moreOptions {
-    position: absolute;
-    right: 0;
+    right: 0px;
     width: max-content;
-    max-height: 0;
     overflow: hidden;
-    transition:max-height 0.3s ;
-    animation: hideOpts .3s linear;
-    animation-fill-mode: forwards;
+    position: unset;
+    transform: translateY(100px);
+    transition: 0.5s;
   }
-  
+  .hideOp{
+    transform: translateY(100px);
+  }
+  .expandContainer{
+    background-color: #00000000;
+    height: max-content;
+    position: absolute;
+    bottom: 40px;
+    right: 5px;
+    overflow: hidden;
+  }
   .showOpts {
-    display: inline-block;
-    animation: showOpts .3s linear;
-    animation-iteration-count: 1;
-    animation-fill-mode: forwards;
+    transform: translateY(0px);
   }
   
   @keyframes showOpts {
     0% {
       max-height: 0;
-      transform: translateY(58px);
+      
     }
     100% {
       max-height: 58px;
-      transform: translateY(0);
+      
     }
   }
 
   @keyframes hideOpts {
     0% {
-      max-height: 58px;
-      transform: translateY(0);
+       
+        background-color: #37378f;
     }
     100% {
-      max-height: 0;
-      visibility: hidden;
-      transform: translateY(58px);
+        max-height: -100px;
+      transform: translateX(400);
     }
   }
   
@@ -658,6 +662,15 @@ li{
         }
         .HomeCards h3,.HomeCards h1{
             max-width: 90%;
+        }
+        .HomecrdMnuHed{
+            text-align: center;
+            margin-right: 10px;
+        
+        }
+        .sync,.sort{
+            margin-left: 10px;
+            margin-right: 10px;
         }
     #TopNav{
         background-color: #221e1e;

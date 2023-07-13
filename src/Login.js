@@ -5,12 +5,15 @@ import { displayOneByOne } from './AppConfig';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { LoginSocialGoogle } from 'reactjs-social-login';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateAuth } from './reducers/authSlice';
 const Login = () => {
   const nav = useNavigate();
+  const dispatch = useDispatch();
   useEffect(()=>{
       let cont = document.getElementsByClassName("MainCont")[0] ;
       cont.classList.add("visible")
-  })
+  },[])
   let Nav = useNavigate();
   return (
     <>
@@ -26,9 +29,12 @@ const Login = () => {
         LoginUser(data.get("email"),data.get("password")).then(
           (response)=>{
             document.getElementById("btnloader").style="display:none;";
-            localStorage.setItem("Auth",JSON.stringify(response))
+            localStorage.setItem("Token",response.token)
             displayOneByOne(response.message,"loginResult",40,"success").then(()=>{
-                setTimeout(()=>{nav("/Dashboard")},500)
+                setTimeout(()=>{
+                  nav("/Dashboard")
+                  dispatch(updateAuth(response))
+                },500)
             })
           },
           (response)=>{
@@ -53,7 +59,8 @@ const Login = () => {
         //console.log(response.data.access_token)
         GoogleSignin(response.data.access_token).then(
           (data)=>{
-            localStorage.setItem("Auth",JSON.stringify(data))
+            localStorage.setItem("Token",data.token)
+            dispatch(updateAuth(data))
             setTimeout(()=>{
               localStorage.removeItem("Loading")
               nav("/Dashboard")

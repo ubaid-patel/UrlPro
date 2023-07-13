@@ -1,5 +1,8 @@
+import { useSelector } from "react-redux"
 import { GetAuth } from "./AppConfig"
+import { selectAuth } from "./reducers/authSlice"
 function Admin(){
+    const auth = useSelector(selectAuth);
     return(
         <>
         <div className="HomeCards" style={{overflowY:"auto",textAlign:"center",padding:"10px",maxHeight:"250px"}}>
@@ -10,7 +13,7 @@ function Admin(){
                 </thead>
                 <tbody>
                     {
-                        GetAuth().users.map((data)=>{
+                        auth.users.map((data)=>{
                             return<tr key={data.email}><td>{data.name}</td><td>{data.email}</td><td>{data.links}</td><td>{data.feedbacks}</td></tr>
                         })
                     }
@@ -20,7 +23,7 @@ function Admin(){
         <div className="HomeCards" style={{overflowY:"auto",textAlign:"center",padding:"10px",maxHeight:"250px"}}>
             <h1 style={{maxWidth:"none"}}>All Feedbacks</h1>
             {
-                GetAuth().feedbacks.map((data)=>{
+                auth.feedbacks.map((data)=>{
                     let style ={
                         margin:"2px",textAlign:"left",marginLeft:"30px"
                     }

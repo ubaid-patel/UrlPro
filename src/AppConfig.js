@@ -2,13 +2,17 @@ function GetHost(){
     return "http://192.168.43.160:5000/"
 }
 function GetAuth(){
-    let Auth = {status:0,token:null,links:[]}
-    try {
-        return JSON.parse(localStorage.Auth)
-      } catch (e) {
-        // Handle the error here
-        return Auth
-      }
+   return( {
+        count:0,
+        message:null,
+        name:null,
+        picture:null,
+        token:localStorage.Token,
+        links:[{endpoint: 'URLPRO', title: 'Example Link', url: 'https://example.com', views: 0}],
+        // For admin useOnly
+        users:undefined,
+        feedbacks:undefined,
+        })
    }
    function displayOneByOne(str, id, time, type = "success") {
     let i = 0;
@@ -34,4 +38,17 @@ function GetAuth(){
       }, time);
     });
   }
+
+export const initState=()=>{
+return(
+{    message:undefined,
+    name:undefined,
+    picture:undefined,
+    token:undefined,
+    links:[],
+    // For admin useOnly
+    users:[],
+    feedbacks:[],}
+)  
+}
 export {GetAuth,GetHost,displayOneByOne}

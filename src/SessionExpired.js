@@ -1,22 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { LoginUser,GoogleSignin } from './ApiCalls';
-import { displayOneByOne } from './AppConfig';
+import { displayOneByOne, initState } from './AppConfig';
 import { useNavigate } from 'react-router-dom';
 import { useEffect,useState } from 'react';
 import { LoginSocialGoogle } from 'reactjs-social-login';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectAuth,updateAuth } from './reducers/authSlice';
 
 function SessionExpired(){
+  const dispatch  = useDispatch();
+  const auth = useSelector(selectAuth);
   const nav = useNavigate();
-  //iter is just used to make sure we remove auth only once
-  const[iter,setIter] = useState(0);
   useEffect(()=>{
-    setIter(iter+1)
-    if(iter == 1){
-      alert("Removed")
-    localStorage.removeItem("Auth")
-    }
-  },)
+    if(localStorage.Token){
+      localStorage.removeItem("Token")
+       dispatch(updateAuth(initState()))
+    }},[])
     let Nav = useNavigate();
     return(
     <>
@@ -36,8 +36,12 @@ function SessionExpired(){
             document.getElementById("btnloader").style="display:none;";
             localStorage.setItem("Auth",JSON.stringify(response))
             displayOneByOne(response.message,"loginResult",40,"success").then(()=>{
-                setTimeout(()=>{nav("/Dashboard")},500)
-            })
+            setTimeout(()=>{
+              nav("/Dashboard")
+              dispatch(updateAuth(response))
+            },500)
+
+            }) 
           },
           (response)=>{
             document.getElementById("btnloader").style="display:none;";
@@ -62,9 +66,11 @@ function SessionExpired(){
         GoogleSignin(response.data.access_token).then(
           (data)=>{
             localStorage.setItem("Auth",JSON.stringify(data))
+            
             setTimeout(()=>{
               localStorage.removeItem("Loading")
               nav("/Dashboard")
+              dispatch(updateAuth(data))
             },300)
           },
           (message)=>{

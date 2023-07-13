@@ -7,6 +7,11 @@ import UserLink from "./UserLink";
 import LinksManagement from "./LinksManagement";
 function Home(){
    
+    //This makes the slideup effect on navigate
+    useEffect(() => {
+        let cont = document.getElementsByClassName("MainCont")[0];
+        cont.classList.add("visible")
+    },[])
     return(
     <>
     <div className="statusBar statusBarRun"></div>

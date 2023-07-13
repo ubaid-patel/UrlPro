@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import "./css/index.css"
 import "./css/dashboard.css"
 import reportWebVitals from './reportWebVitals';
-import { RouterProvider,createBrowserRouter,createRouter } from 'react-router-dom';
+import { BrowserRouter,Routes,Route,RouterProvider,createBrowserRouter,createRouter } from 'react-router-dom';
 import TopNav from './TopNav';
 import Home from './Home';
 import Login from './Login';
@@ -18,27 +18,34 @@ import Admin from './Admin';
 import SessionExpired from './SessionExpired';
 import { RefreshData } from './ApiCalls';
 import { useNavigate } from 'react-router-dom';
+import { createStore } from 'redux';
+import LinksManagement from './LinksManagement';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
  
-const routes = createBrowserRouter([
-  {path:"",element:<><TopNav/><Home/></>},
-  {path:"/login",element:<><TopNav/><Login/></>},
-  {path:"/Admin",element:<><TopNav/><Admin/></>},
-  {path:"/Loading",element:<><TopNav/><Loading/></>},
-  {path:"/Dashboard",element:<><TopNav/><DashBoard/></>},
-  {path:"/Settings",element:<><TopNav/><Settings/></>},
-  {path:"/Feedback",element:<><TopNav/><Feedback/></>},
-  {path:"/signup",element:<><TopNav/><Signup/></>},
-  {path:"/logout",element:<><TopNav/><LogoutUser/></>},
-  {path:"/SessionExpired",element:<><TopNav/><SessionExpired/></>},
-  {path:"/forgotPassword",element:<><TopNav/><ForgotPassword/></>},
-])
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-      root.render(
-        <React.StrictMode>
-            <RouterProvider router={routes} />
-        </React.StrictMode>
-      );
+root.render(
+<Provider store={store}>
+      <BrowserRouter>
+      <TopNav/>
+            <Routes>
+                  <Route path="/" element={<Home/>} />
+                  <Route path="/login" element={<Login/>} />
+                  <Route path="/admin" element={<Admin/>} />
+                  <Route path="/loading" element={<Loading/>} />
+                  <Route path="/dashboard" element={<DashBoard   />} />
+                  <Route path="/settings" element={<Settings/>} />
+                  <Route path="/feedback" element={<Feedback/>} />
+                  <Route path="/signup" element={<Signup/>} />
+                  <Route path="/logout" element={<LogoutUser/>} />
+                  <Route path="/sessionExpired" element={<SessionExpired/>} />
+                  <Route path="/forgotPassword" element={<ForgotPassword/>} />
+            </Routes>
+      </BrowserRouter>
+</Provider>
+)
+
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

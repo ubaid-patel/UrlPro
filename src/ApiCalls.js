@@ -17,7 +17,7 @@ function RefreshData(){
                 }
                 });
                 xhr.open("POST", GetHost()+"RefreshData?token="+GetAuth().token);
-                console.log(GetAuth().token)
+                // console.log(GetAuth().token)
                 xhr.send();
             }catch(error){
                 reject(406,"Invalid Url")
@@ -35,7 +35,7 @@ function CreateLink(data){
         xhr.addEventListener("readystatechange", function() {
         if(this.readyState === 4) {
             let reponse = JSON.parse(this.responseText);
-            let obj = {"url":data.get("url"),"endpoint":reponse.endpoint,"title":data.get("title"),"views":0}
+            let obj = {"url":data.get("url"),"endpoint":reponse.endpoint,"title":data.get("title"),"views":0,createdOn:new Date().toUTCString()}
             if(this.status === 201){
                 resolve(obj)
             }else{
