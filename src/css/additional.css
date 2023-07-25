@@ -1,0 +1,51 @@
+.Mobile{
+    display: none;
+}
+.Mobile{
+    display: block;
+    margin: auto;
+}
+.Mobile table{
+    width: 100%;
+}
+.Mobile input{
+    width: 95%;
+    margin-right: 0px;
+}
+.Mobile .actbtn{
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+.mobNavSlB{
+    background-color: inherit;
+    width: 20%;
+    display: inline;
+    margin-top: 15px;
+    margin-right: 10px;
+}
+.mobNavSlB button{
+    margin: 0px;
+    display: block;
+    margin: auto;
+    float:none;
+    border: none;
+    width: 100%;
+}
+.mobNavSlB button:first-child{
+    margin-bottom: 7px;
+}
+#mobileTable{
+    display: none;
+}
+#mobileTable{
+    display: block;
+    margin-top: 100px;
+}
+#mobileTable table{
+    border: 1px solid;
+    margin-top: 20px;
+    overflow: hidden;
+    max-width: 100%;
+    margin: auto;
+}

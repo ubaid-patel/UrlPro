@@ -1,57 +1,60 @@
-import { displayOneByOne, GetAuth } from "./AppConfig"
-import { CreateLink,sendOTP,SignupUser } from "./ApiCalls";
-import { useEffect, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DeleteLink } from "./ApiCalls";
-import UserLink from "./UserLink";
 import Admin from "./Admin";
-import "./css/dashboard.css"
 import LinksManagement from "./LinksManagement";
 import { useSelector } from "react-redux";
 import { selectAuth } from "./reducers/authSlice";
-function DashBoard(){
-    let Nav = useNavigate();
-    useEffect(()=>{
-        if(auth.token === undefined){
-            Nav("/")
-        }else{
-            let cont = document.getElementsByClassName("MainCont")[0] ;
-            cont.classList.add("visible")
-        }
-    },[]);
+import styles from './css/dashboard.module.css'
+
+function DashBoard() {
+    let navigate = useNavigate();
     const auth = useSelector(selectAuth);
-    // console.log(auth.token)
-    function countViews(){
+
+    //reference for mainDiv for animation
+    const maincomp = useRef(null)
+
+    //the below code will perform userLoggenin checkup and some animations
+    useEffect(() => {
+        maincomp.current.classList.add("visible")
+        if (auth.token === undefined) {
+            
+        } else {
+            
+        }
+    }, []);
+
+
+    //it will return of sum of all link views
+    function countViews() {
         let views = 0
         let links = auth.links;
-        for(let link of links){
-            views +=link.views
+        for (let link of links) {
+            views += link.views
         }
         return views
     }
-    // console.log("Hellow This is bform ds",auth.links,auth.links[0].views)
-    return(
-        <>
-        <div className="statusBar statusBarRun"></div>
-        <div className="MainCont" key={"Dashboard"}>
-            {
-            (auth.users && auth.feedbacks)?<h1 style={{textAlign:"center"}}>Hi Admin</h1>:<h1 style={{textAlign:"center"}}>Hi {GetAuth().name}</h1>
-            }
-            <div className="dash flex">
-                <div className="DashCards">
-                    <h1>Total Links</h1>
-                    <h1>{auth.links.length}</h1>
+    return (
+        <React.Fragment>
+            <div className={`${styles.statusBar} ${styles.statusBarRun}`}></div>
+            <div className={styles.MainCont} ref={maincomp} key={"Dashboard"}>
+                {
+                    (auth.users && auth.feedbacks) ? <h1>Hi Admin</h1> : <h1>Hi {auth.name}</h1>
+                }
+                <div className={`${styles.dash} ${styles.flex}`}>
+                    <div className={styles.DashCards}>
+                        <h1>Total Links</h1>
+                        <h1>{auth.links.length}</h1>
+                    </div>
+                    <div className={styles.DashCards}>
+                        <h1>Total Visits</h1><h1>{countViews()}</h1>
+                    </div>
                 </div>
-                <div className="DashCards">
-                <h1>Total Visits</h1><h1>{countViews()}</h1>
-                </div>
+                <LinksManagement/>
+                {
+                    (auth.users && <Admin /> )
+                }
             </div>
-            <LinksManagement/>
-            {
-            (auth.users && auth.feedbacks)?<Admin/>:<></>
-            }
-    </div>
-    </>
+            </React.Fragment>
     )
 }
 export default DashBoard;

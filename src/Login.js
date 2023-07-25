@@ -1,92 +1,83 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { LoginUser,GoogleSignin } from './ApiCalls';
+import { LoginUser, GoogleSignin } from './ApiCalls';
 import { displayOneByOne } from './AppConfig';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { LoginSocialGoogle } from 'reactjs-social-login';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateAuth } from './reducers/authSlice';
+import styles from './css/login.module.css';
+import { useGoogleLogin } from '@react-oauth/google';
 const Login = () => {
+  const loginResult = useRef(null),
+    MainContRef = useRef(null),
+    loaderRef = useRef(null);
   const nav = useNavigate();
   const dispatch = useDispatch();
-  useEffect(()=>{
-      let cont = document.getElementsByClassName("MainCont")[0] ;
-      cont.classList.add("visible")
-  },[])
-  let Nav = useNavigate();
-  return (
-    <>
-    <div className="statusBar statusBarRun"></div>
-    <div className="MainCont">
-    <div className='forms'>
-      <h4 id="loginResult"></h4>
-      <form onSubmit={(e)=>{
-        e.preventDefault();
-        document.getElementById("btnloader").style="display:block;";
+  useEffect(() => {
+    MainContRef.current.classList.add(styles.showMainCont)
+  }, [])
 
-        let data = new FormData(e.target);
-        LoginUser(data.get("email"),data.get("password")).then(
-          (response)=>{
-            document.getElementById("btnloader").style="display:none;";
-            localStorage.setItem("Token",response.token)
-            displayOneByOne(response.message,"loginResult",40,"success").then(()=>{
-                setTimeout(()=>{
-                  nav("/Dashboard")
-                  dispatch(updateAuth(response))
-                },500)
-            })
-          },
-          (response)=>{
-            document.getElementById("btnloader").style="display:none;";
-            displayOneByOne(response.message,"loginResult",40,"failed")
-          }
-        )
-      }}>
-      <input type="email" required name="email" placeholder="Enter Email" className="inputText" />
-      <input type="password" required name="password" placeholder="Enter Password" className="inputText" />
-      <button type="submit" style={{margin:"auto",marginBottom:"10px",marginTop:"30px",display:"flex",alignItems:"center"}} className="Button submitBtn">Login <div id="btnloader" className="smLoader smaller-cut hide"></div></button>
-      <Link to="/forgotPassword" className='Links'>Forgot password?</Link>
-      <Link to="/signup" className='Links' style={{marginTop:"5px"}}>Dont have an account?</Link>
-      </form>
-      <LoginSocialGoogle
-      client_id={'1073579154631-nr0b438d5sqljlqfjkiev25ujshf3cs2.apps.googleusercontent.com'}
-      scope='openid profile email'
-      discoveryDocs='claims_supported'
-      access_type='offline'
-      typeResponse='accessToken'
-      onResolve={(response)=>{
-        //console.log(response.data.access_token)
-        GoogleSignin(response.data.access_token).then(
-          (data)=>{
-            localStorage.setItem("Token",data.token)
-            dispatch(updateAuth(data))
-            setTimeout(()=>{
-              localStorage.removeItem("Loading")
+  function LoginWithPassword(event){
+      event.preventDefault();
+      loaderRef.current.classList.add(styles.visible);
+
+      let data = new FormData(event.target);
+      LoginUser(data.get("email"), data.get("password")).then(
+        (response) => {
+          loaderRef.current.classList.remove(styles.visible)
+          localStorage.setItem("Token", response.token)
+          displayOneByOne(response.message, loginResult, 40, "success").then(() => {
+            setTimeout(() => {
               nav("/Dashboard")
-            },300)
-          },
-          (message)=>{
-            localStorage.removeItem("Loading")
-            nav("/login")
-            displayOneByOne(message,"loginResult",40,"failed")
-          }
-        )
-      }}
-      onReject={(err)=>{
-        console.log(err)
-      }}
-      onLoginStart={()=>{
-        localStorage.setItem("Loading","true")
-        nav('/Loading')
-      }}
-      >
-        <div id="googleLogin"><img src="/static/google.svg"/> Continue with google</div>
-      </LoginSocialGoogle>
-      
-    </div>
-    </div>
-    </>
+              dispatch(updateAuth(response))
+            }, 500)
+          })
+        },
+        (response) => {
+          loaderRef.current.classList.remove(styles.visible)
+          displayOneByOne(response.message, loginResult, 40, "failed")
+        }
+      )
+    }
+  const LoginWithGoogle = useGoogleLogin({
+    onSuccess:(data)=>{
+      GoogleSignin(data.access_token).then(
+        (response)=>{
+          dispatch(updateAuth(response));
+          localStorage.Token = response.token;
+        },
+        (response)=>{
+          console.log(response.message)
+        }
+      )
+      nav("/Dashboard")
+    },
+  })
+  return (
+    <React.Fragment>
+      <div className={`${styles.statusBar} ${styles.statusBarRun}`}></div>
+      <div ref={MainContRef} className={styles.MainCont}>
+        <div className={styles.forms}>
+          {(window.location.pathname === '/sessionExpired')?
+          <React.Fragment>
+            
+          </React.Fragment>
+          :<React.Fragment></React.Fragment>}
+          <h4 ref={loginResult}></h4>
+          <form onSubmit={LoginWithPassword}>
+            <input type="email" required name="email" placeholder="Enter Email" className={styles.inputText} />
+            <input type="password" required name="password" placeholder="Enter Password" className={styles.inputText} />
+            <button type="submit" className={styles.submitBtn}>Login
+              <div ref={loaderRef} className={styles.smLoader}></div></button>
+            <Link to="/forgotPassword" className={styles.Links}>Forgot password?</Link>
+            <Link to="/signup" className={styles.Links}>Dont have an account?</Link>
+          </form>
+          <div id="googleLogin" onClick={LoginWithGoogle}><img src="/static/google.svg" /> Continue with google</div>
+        </div>
+      </div>
+    </React.Fragment>
   );
 };
 

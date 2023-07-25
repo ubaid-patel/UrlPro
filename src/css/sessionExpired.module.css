@@ -1,0 +1,9 @@
+.Container{
+    display: block;
+    margin: auto;
+    margin-top: 100px;
+    text-align: center;
+    width: 25%;
+    background-color: rgba(184, 178, 178, 0.535);
+    border-radius: 10px;
+}

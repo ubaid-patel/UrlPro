@@ -1,11 +1,7 @@
 ::-webkit-scrollbar{
     display: none;
 }
-.MainCont{
-    opacity: 0;
-    transform: scale(.9);
-    transition: .3s;
-}
+
 .visible{
     animation: showall .5s infinite forwards;
     animation-iteration-count: 1;
@@ -45,19 +41,7 @@
   }
   
 
-.statusBar{
-    max-width: 0px;
-    height: 3px;
-    width: 100%;
-    background-color: #7dc13d;
-    position: fixed;
-    top:0px;
-    transition: 1s;
-}
-.statusBarRun{
-    animation: expand 3s infinite;
-    animation-iteration-count: 1;
-}
+
 @keyframes expand{
     0%{
         max-width: 500px
@@ -103,7 +87,6 @@
     font-size: 40px;
     font-weight: -lighter;
     color: white;
-    cursor: pointer;
     z-index: 1;
 }
 .profileMenu ul,.profileMenu li{
@@ -139,13 +122,7 @@
     top:50px;
     z-index: 1;
 }
-#allusers{
-    margin: auto;
-    text-align: center;
-}
-#allusers td{
-    padding: 5px;
-}
+
 #User_Circle_1_{
     fill: rgb(255, 255, 255);
 }
@@ -187,7 +164,6 @@ body{
     margin-top: 25px;
     border-radius: 5px;
     display: block;
-    cursor: pointer;
 }
 a{
     text-decoration: none;
@@ -198,17 +174,7 @@ a{
     transform: scale(1.01);
     box-shadow: 2px 2px 8px 0 #000000;
 }
-.smLoader {
-    margin-left: 10px;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 2px dotted black;
-    border-right-color: white;
-    background-color: white;
-    animation: loader 1s infinite linear;
-    box-sizing: border-box; /* added to account for border width in width/height */
-  }
+
   .hide{
     display: none;
   }
@@ -221,9 +187,11 @@ a{
       transform: rotate(360deg);
     }
   }
-  
+body{
+    -webkit-user-select: none;   
+    user-select: none;   
+}
 #appName{
-    cursor: pointer;
     display: block;
     margin-top: 20px;
     text-decoration: underline 1px;
@@ -290,34 +258,12 @@ a{
     word-spacing: 2px;
     color: #faf6ed;
   }
-.inputText{
-    outline: none;
-    border: none;
-    padding-left: 5px;
-    border-bottom: 2px solid;
-    border-radius: 5px;
-    font-size: 18px;
-    color: #2c2f36;
-    background-color: #00000000;
-    margin-top: 20px;
-    width: 250px;
-    box-sizing: border-box;
-    display: inline-block;
-    text-align:left;
-    padding-left: 10px;
-}
-::placeholder {
-    color: #505768;
-    font-size: 13px;
-  }
+
 :disabled{
     background-color: #989494a8;
     color: #414141;
 }
-.Links{
-    color: #475ed1;
-    display: block;
-}
+
 .submitBtn{
     font-size: 15px;
     margin: auto;
@@ -341,16 +287,13 @@ a{
     text-shadow:  2px 2px 15px #63666e;
     margin: auto;
 }
-#mobileTable{
-    display: none;
-}
+
 body{
     font-family: 'Tilt Neon', cursive;
     margin: 0px;
 }
 span{
     color: rgb(86, 48, 189);
-    cursor: pointer;
 }
 textarea{
     background-color: #a1bd9e;
@@ -360,11 +303,7 @@ textarea{
     color: black;
     height: auto;
 }
-.flex{
-    display: flex;
-    align-items: center;
-    justify-content: end;
-}
+
 .HomeCards{
     padding: 20px;
     width: 90%;
@@ -383,33 +322,7 @@ textarea{
 .HomeCards img{
     border-radius: 20px;
 }
-li{
-    cursor: pointer;
-}
-.actbtn{
-    cursor: pointer;
-    margin-right: 10px;
-    border-radius: 5px;
-    border: none;
-    background-color: #505768;
-}
-.actbtn img{
-    filter: invert(1);
-    height: 25px;
-    color: white;
-    padding: 2px;
-}
-.editbtn{
-    background-color: #d15454;
-}
-.savebtn{
-    background-color: #475ed1;
-}
-.userLink{
-    display: block;
-    margin: auto;
-    width: max-content;
-}
+ 
 .userLink input{
     border:none;
     outline: none;
@@ -424,47 +337,7 @@ li{
     padding-left: 10px;
     
 }
-.moreOptions{
-    display: inline-block;
-    background-color: white;
-    width: max-content;
-    padding: 5px;
-    text-align: center;
-    border-radius: 3px;
-    
-}
-.moreOptions ul,.moreOptions li{
-    font-size: medium;
-    list-style-type:none;
-    margin: 0px;
-    padding: 0px;
-}
-.Mobile{
-    display: none;
-}
-.moreOptions {
-    right: 0px;
-    width: max-content;
-    overflow: hidden;
-    position: unset;
-    transform: translateY(100px);
-    transition: 0.5s;
-  }
-  .hideOp{
-    transform: translateY(100px);
-  }
-  .expandContainer{
-    background-color: #00000000;
-    height: max-content;
-    position: absolute;
-    bottom: 40px;
-    right: 5px;
-    overflow: hidden;
-  }
-  .showOpts {
-    transform: translateY(0px);
-  }
-  
+
   @keyframes showOpts {
     0% {
       max-height: 0;
@@ -487,22 +360,7 @@ li{
     }
   }
   
-  .forms{
-    display: block;
-    margin: auto;
-    margin-top: 100px;
-    text-align: center;
-    width: 25%;
-    padding: 20px;
-    background-color: rgba(184, 178, 178, 0.535);
-    border-radius: 10px;
-  }
-  .forms input[type=text],.forms input[type=password],.forms input[type=email] {
-    text-align: left;
-    width: 90%;
-    font-size: 17px;
-    margin-top: 30px;
-  }
+ 
   ::placeholder{
     font-size: 17px;
     font-weight: 200;
@@ -513,13 +371,8 @@ li{
     border: 2px solid;
     border-radius: 50%;
   }
-  .forms input[type=otp]{
-    border-radius: 0px;
-    width: 30%;
-  }
-  button{
-    cursor: pointer;
-  }
+
+ 
 
   .formInlinebtn{
     background-color:rgb(255, 255, 255) ;
@@ -549,7 +402,7 @@ li{
     width: 100%;
 }
 .Desktop input{
-    width: 97%;
+    width: 48%;
     margin-right: 10px;
 }
 .Desktop td:nth-child(3),.Desktop td:nth-child(4){
@@ -600,74 +453,20 @@ li{
         background-size: cover;
         min-height: 100vh;
       }
-    .forms{
-        width: 80%;
-    }
+   
     ::placeholder{
         font-weight: 400; 
     }
     .Desktop{
         display: none;
     }
-    .Mobile{
-        display: block;
-        margin: auto;
-    }
+
     .userLink{
         width: 100%;
     }
-    .Mobile table{
-        width: 100%;
-    }
-    .Mobile input{
-        width: 95%;
-        margin-right: 0px;
-    }
-    .moreOptions{
-        right: 30px;
-    }
-    .Mobile .actbtn{
-        width: 100%;
-        margin: 0px;
-        padding: 0px;
-    }
-    .Mobile .infoclose{
-        width: 50px;
-        height: max-content;
-        background-color: #00000000;
-        margin-top: -5px;
-    }
-    .infoCard{
-        max-width: 90%;
-        margin: auto;
-    }
-    .dash{
-        display: block;
-    }
-    .DashCards{
-        min-width: 75%;
-    }
-            .HomeCards div:first-child {
-              order: 2;
-            }
-        
-            .HomeCards div:last-child {
-              order: 1;
-            }
-        .HomeCards{
-            flex-direction: column;
-            justify-content: center;
-            padding: 0px;
-            padding: 10px;
-        }
-        .HomeCards h3,.HomeCards h1{
-            max-width: 90%;
-        }
-        .HomecrdMnuHed{
-            text-align: center;
-            margin-right: 10px;
-        
-        }
+
+   
+            
         .sync,.sort{
             margin-left: 10px;
             margin-right: 10px;
@@ -685,24 +484,13 @@ li{
         margin: auto;
         margin-left: 10px;
     }
-    .mobNavSlB{
-        background-color: inherit;
-        width: 20%;
-        display: inline;
-        margin-top: 15px;
-        margin-right: 10px;
-    }
-    .mobNavSlB button{
-        margin: 0px;
-        display: block;
-        margin: auto;
-        float:none;
-        border: none;
+    
+    .Links{
         width: 100%;
+        background-color: blue;
     }
-    .mobNavSlB button:first-child{
-        margin-bottom: 7px;
-    }
+    
+   
     .Profile{
         max-width: 100%;
     }
@@ -713,10 +501,7 @@ li{
     #savedLinks{
         display: none;
     }
-    #mobileTable{
-        display: block;
-        margin-top: 100px;
-    }
+
     #appName{
         width: 100%;
     }
@@ -741,26 +526,17 @@ li{
         width: 90%;
     }
   }
-#mobileTable table{
-    border: 1px solid;
-    margin-top: 20px;
-    overflow: hidden;
-    max-width: 100%;
-    margin: auto;
-}
+
 #shortUrl table,#changePass table{
     text-align: right;
 }
 #shortUrl td,#changePass td{
     vertical-align: bottom;
 }
-.imgBtn{
-    cursor: pointer;
-}
+ 
 #googleLogin{
     margin-top: 10px;
     border: 1px solid #ffffff00;
-    cursor: pointer;
     display: flex;
     align-items: center;
     width: max-content;

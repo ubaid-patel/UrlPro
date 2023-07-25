@@ -5,6 +5,7 @@ export const authSlice = createSlice({
     name:"auth",
     initialState:{
         auth:{
+        isLoggedIn:false,
         count:0,
         message:null,
         name:null,

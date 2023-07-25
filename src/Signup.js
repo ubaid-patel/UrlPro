@@ -1,159 +1,189 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { json, Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { SignupUser,sendOTP, GoogleSignin } from './ApiCalls';
+import { SignupUser, sendOTP, GoogleSignin } from './ApiCalls';
 import { displayOneByOne } from './AppConfig';
 import { useGoogleLogin } from '@react-oauth/google';
-import { GoogleLogin } from '@react-oauth/google';
+import styles from './css/signup.module.css'
 import { LoginSocialGoogle } from 'reactjs-social-login';
-
-const clientId = "679480088996-jptefnvqmp7a7qfrab6frjoq4f3nkn64.apps.googleusercontent.com";
-const scope = "https://www.googleapis.com/auth/userinfo.profile";
+import { useDispatch } from 'react-redux';
+import { updateAuth } from './reducers/authSlice';
 
 const Signup = () => {
+  const [isOtpSent, setOtpSent] = useState(false)
   const nav = useNavigate();
-  const[emailId,setEmail]=useState();
-    useEffect(()=>{
-      let cont = document.getElementsByClassName("MainCont")[0] ;
-      cont.classList.add("visible")
+  const dispatch = useDispatch();
+  const formObject = useRef(null),
+    passwordRef = useRef(null),
+    MainContRef = useRef(null),
+    loaderRef = useRef(null),
+    resendLoaderRef = useRef(null),
+    MessageRef = useRef(null),
+    formContRef = useRef(null),
+    obj = { name: null, password: null, email: null };
+
+  //Creates a simplified Object from FormDataObject
+  if (formObject.current !== null) {
+    obj.name = formObject.current.get("name");
+    obj.email = formObject.current.get("email");
+    obj.password = formObject.current.get("password");
+  } else {
+    obj.name = '';
+    obj.email = '';
+    obj.password = '';
+  }
+
+
+  //Initial Ui animation
+  useEffect(() => {
+    MainContRef.current.classList.add(styles.showMainCont)
   })
 
-  function sendOtp(e){
-    let form = new FormData(e.target);
-    setEmail(form.get("email"))
-    const emailcheck = /^[a-zA-Z0-9._%+-]+@(gmail|outlook|yahoo|icloud|aol|protonmail|zoho|mail|gmx|fastmail)\.(com|net|org|edu|gov|mil|info|biz|co|uk)$/i
-    if(emailcheck.test(form.get("email"))){
-        sendOTP(form.get("email"),0).then(
-          (response)=>{displayOneByOne(response.message,"SignupResult",40,"success")},
-          (response)=>{displayOneByOne(response.message,"SignupResult",40,"failed")})
-      }else{
-        displayOneByOne("Mail provider not supported","SignupResult",40,"failed")
-      }  
-    document.getElementById("form").classList.toggle("sendotpanimate")
-    setTimeout(() => {
-      document.getElementById("form").style="display:none;"
-      document.getElementById("verify").style="display:block;"
-    }, 1000);  
+  //Updating state with Transition Effect
+  function setOtpSentWithAnimation(otpSent) {
+    if (otpSent) {
+      if (formContRef.current.classList.contains(styles.expand)) {
+        formContRef.current.classList.remove(styles.expand);
+      } else {
+        formContRef.current.classList.add(styles.hide);
+      }
+      setTimeout(() => {
+        setOtpSent(true)
+        formContRef.current.classList.add(styles.expand);
+      }, 300)
+    } else {
+      formContRef.current.classList.remove(styles.expand);
+      setTimeout(() => {
+        setOtpSent(false)
+        formContRef.current.classList.add(styles.expand)
+      }, 300)
+    }
   }
-  function CreateAccount(e) {
-    let otp = document.getElementById("otpInput").value;
-    let name = document.getElementById("nameInput").value;
-    let email = document.getElementById("emailInput").value;
-    let password = document.getElementById("passwordInput").value;
-    let data={name:name,email:email,password:password,otp:otp}
-    document.getElementById("btnloader").style="display:block;";
-    SignupUser(data).then(
-      (message) => {
-        document.getElementById("btnloader").style="display:none;";
-        displayOneByOne(message,"SignupResult",40,"success").then(
-          ()=>{
-            setTimeout(()=>{
+
+
+  //Verify Email pattern and Send Otp
+  function handleSendOTP(event) {
+    event.preventDefault();
+    loaderRef.current.classList.add(styles.visible);
+    formObject.current = new FormData(event.target);
+    let email = formObject.current.get('email');
+    const emailcheck = /^[a-zA-Z0-9._%+-]+@(gmail|outlook|yahoo|icloud|aol|protonmail|zoho|mail|gmx|fastmail)\.(com|net|org|edu|gov|mil|info|biz|co|uk)$/i
+    if (emailcheck.test(email)) {
+      sendOTP(email, 0).then(
+        (response) => {
+          MessageRef.current.style = "display:none";
+          setOtpSentWithAnimation(true)
+        },
+        (response) => { displayOneByOne(response.message, MessageRef, 40, "failed") }
+      ).finally(
+        () => {
+          loaderRef.current.classList.remove(styles.visible);
+        }
+      )
+    } else {
+      displayOneByOne("Mail provider not supported", MessageRef, 40, "failed").then(
+        () => {
+          loaderRef.current.classList.remove(styles.visible);
+        }
+      )
+
+    }
+  }
+
+  //Resends OTP
+  const resendOTP = () => {
+    resendLoaderRef.current.classList.add(styles.visible);
+    sendOTP(obj.email, 0).then(
+      (response) => {
+        displayOneByOne("OTP resent retry after 1 min", MessageRef, 40, "success")
+      },
+      (response) => { displayOneByOne(response.message, MessageRef, 40, "failed") }
+    ).finally(
+      () => {
+        resendLoaderRef.current.classList.remove(styles.visible);
+      }
+    )
+  }
+
+  function SignupWithOTP(event) {
+    event.preventDefault();
+    let otp = new FormData(event.target).get("otp");
+    obj.otp = otp;
+    SignupUser(obj).then(
+      (response) => {
+        displayOneByOne(response.message, MessageRef, 40, "success").then(
+          () => {
+            setTimeout(() => {
+              dispatch(updateAuth(response))
+              localStorage.Token = response.Token;
               nav("/Dashboard")
-            },1500)
+            }, 1500)
           }
         )
       },
-      (message) => {
-        document.getElementById("btnloader").style="display:none;";
-        displayOneByOne(message,"SignupResult",40,"failed")
+      (response) => {
+        displayOneByOne(response.message, MessageRef, 40, "failed")
       }
     );
   }
-
-  return (
-    <>
-    <div className="statusBar statusBarRun"></div>
-    <div className="MainCont">
-    <div className='forms addanim' id="form">
-    <p id="GoogleResult"></p>
-      <form method="post" onSubmit={(e) => { e.preventDefault(); sendOtp(e) }}>
-        <input required type="text" id="nameInput" name="name" placeholder="Full name" className="inputText" /><br/>
-        <input required type="email" id="emailInput" name="email" placeholder="Email" className="inputText"/><br/>
-        <input required type="password" id="passwordInput" name="password" placeholder="Password" className="inputText" /><br/>
-        <input type="checkbox" id="showPass"onChange={(e)=>{
-          let elem = document.getElementById("passwordInput");
-          if(e.target.checked){
-            elem.type="text"
-          }else{
-            elem.type="password"
-          }
-        }}/> Show Password<br/><br/>
-          <button type="submit" className="Button submitBtn">Signup</button>
-      </form>
-      <Link to="/login" className='Links' style={{marginTop:"10px"}}>Already have an account? Login</Link>
-      <LoginSocialGoogle
-      client_id={'1073579154631-nr0b438d5sqljlqfjkiev25ujshf3cs2.apps.googleusercontent.com'}
-      scope='openid profile email'
-      discoveryDocs='claims_supported'
-      access_type='offline'
-      typeResponse='accessToken'
-      onResolve={(response)=>{
-        // console.log(response)
-        GoogleSignin(response.data.access_token).then(
-          (data)=>{
-            localStorage.setItem("Auth",JSON.stringify(data))
-            setTimeout(()=>{
-              localStorage.removeItem("Loading")
-              nav("/Dashboard")
-            },300)
+  const SignupWithGoogle = useGoogleLogin(
+    {
+      onSuccess: (data) => {
+        GoogleSignin(data.access_token).then(
+          (response) => {
+            dispatch(updateAuth(response))
+            localStorage.Token = response.Token;
           },
-          (message)=>{
-            localStorage.removeItem("Loading")
-              nav("/signup")
-              displayOneByOne(message,"GoogleResult",40,"failed")
+          (response) => {
+            console.log(response.message)
           }
         )
-      }}
-      onReject={(err)=>{
-        console.log(err)
-      }}
-      onLoginStart={()=>{
-        localStorage.setItem("Loading","true")
-        nav('/Loading')
-      }}
-      >
-        <div id="googleLogin"><img src="/static/google.svg"/> Continue with google</div>
-      </LoginSocialGoogle>
-      </div>
-      <div className='forms' id="verify" style={{display:"none"}}>
-      <p id="SignupResult"></p>
-      <form  method="post" onSubmit={(e) => { e.preventDefault(); CreateAccount(e) }}>
-        <p className='formTitle'>
-          <h2>Enter OTP</h2>
-          A 6 Digit code is sent to your email adderss {emailId}<br/>
-          <span onClick={()=>{
-            setTimeout(() => {
-              document.getElementById("verify").style="display:none;"
-              document.getElementById("form").classList.remove("sendotpanimate")
-              document.getElementById("form").style="display:block;"
-            }, 100);  
-          }}>Change email address</span>  <button type='button' className='formInlinebtn' onClick={
-            (e)=>{
-              e.target.setAttribute("disabled",true)
-                let time = 59;
-                let timer = setInterval(()=>{
-                  e.target.innerHTML = "Resend in "+time+"s";
-                  if(time === 0){
-                    e.target.removeAttribute("disabled")
-                    e.target.innerHTML = "Resend OTP";
-                    clearInterval(timer)
-                  }
-                  time--
-                },1000)
-              sendOTP(document.getElementById("emailInput").value,0).then(
-                (response)=>{displayOneByOne(response.message,"SignupResult",40,(response.status === 1)?"success":"failed")}
-              )
-            }
-          }>Resend OTP</button>        
-        </p>
-        <input required type="text" name="otp" id="otpInput" placeholder="OTP" className="inputText"/><br/>
-        <div style={{ textAlign: 'center' }}>
-        <button type="submit" style={{margin:"auto",marginBottom:"40px",marginTop:"30px",display:"flex",alignItems:"center"}} className="Button submitBtn">Verify <div id="btnloader" className="smLoader smaller-cut hide"></div></button>
+        nav('/DashBoard');
+      }
+    }
+  );
+
+  function ToggleShowPass(event) {
+    if (event.target.checked) {
+      passwordRef.current.type = 'text';
+    } else {
+      passwordRef.current.type = 'password';
+    }
+  }
+
+  return (
+    <React.Fragment>
+      <div className={styles.MainCont} ref={MainContRef}>
+        <div className={`${styles.form}`} ref={formContRef}>
+          <h3 ref={MessageRef}></h3>
+          {(!isOtpSent ?
+            <form method="post" onSubmit={handleSendOTP}>
+              <input required type="text" name="name" placeholder="Full name" defaultValue={obj.name} /><br />
+              <input required type="email" name="email" placeholder="Email" defaultValue={obj.email} /><br />
+              <input required ref={passwordRef} type="password" name="password" placeholder="Password" defaultValue={obj.password} /><br />
+              <input type="checkbox" onChange={ToggleShowPass} /> Show Password<br /><br />
+              <button type="submit" className={styles.submitBtn}>Signup<div ref={loaderRef} className={styles.smLoader}></div></button>
+            </form>
+            :
+            <form method="post" onSubmit={SignupWithOTP}>
+              <h2>Enter OTP</h2>
+              A 6 Digit code is sent to your email adderss {obj.email}<br />
+              <span onClick={() => { setOtpSentWithAnimation(false) }}>Change email address</span>
+              <button type='button' className={styles.resendBtn} onClick={resendOTP}>
+                Resend OTP
+                <div ref={resendLoaderRef} className={styles.smLoader}></div>
+              </button>
+              <input required type="text" name="otp" placeholder="OTP" /><br />
+              <div>
+                <button type="submit" className={styles.submitBtn}>Verify <div ref={loaderRef} className={styles.smLoader}></div></button>
+              </div>
+            </form>
+          )}
+          <Link to="/login" className={styles.Links}>Already have an account? Login</Link>
+          <div id="googleLogin" onClick={SignupWithGoogle}><img src="/static/google.svg" /> Continue with google</div>
         </div>
-      </form>
       </div>
-      </div>
-    </>
+    </React.Fragment>
   );
 };
 

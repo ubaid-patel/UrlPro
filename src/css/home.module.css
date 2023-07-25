@@ -1,0 +1,103 @@
+.statusBar{
+    max-width: 0px;
+    height: 3px;
+    width: 100%;
+    background-color: #7dc13d;
+    position: fixed;
+    top:0px;
+    transition: 1s;
+}
+.statusBarRun{
+    animation: expand 3s infinite;
+    animation-iteration-count: 1;
+}
+
+.MainCont{
+    opacity: 0;
+    transform: scale(.9);
+    transition: .3s;
+}
+.visible{
+    animation: showall .5s infinite forwards;
+    animation-iteration-count: 1;
+}
+@keyframes showall {
+    0%{
+        opacity: 0.5;
+    }100%{
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.AppName{
+    margin-top: 30px;
+}
+.AppName h1, .AppName h3{
+max-width: 100%;
+text-align: center;
+margin: 0px;
+text-shadow: -4px 4px 4px rgba(126, 175, 255, 0.497);
+}
+.dash{
+    
+}
+ 
+.HomeCards{
+    padding: 20px;
+    width: 90%;
+    min-height: 300px;
+    height: auto;
+    background-color: #e5ebfc7c;
+    margin: auto;
+    border-radius: 20px;
+    box-shadow: 0 8px 13px 5px rgba(2, 2, 2, 0.819);
+    margin-top: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+.HomeCards h3,.HomeCards h1{
+    max-width: 60%;
+    text-align: center;
+}
+.HomeCards img{
+    border-radius: 20px;
+} 
+ 
+div {
+    display: block;
+}
+body {
+    font-family: Tilt Neon,cursive;
+    margin: 0;
+}
+
+h1{
+    text-align: center;
+}
+@media screen and (max-width: 600px)  {
+    .HomeCards div:first-child {
+        order: 2;
+      }
+  
+      .HomeCards div:last-child {
+        order: 1;
+      }
+  .HomeCards{
+      flex-direction: column;
+      padding: 10px;
+  }
+  .HomeCards h3,.HomeCards h1{
+      max-width: 90%;
+      margin: auto;
+      text-align: center;
+  }
+}
+
+/* 
+.HomecrdMnuHed{
+    text-align: center;
+    margin-right: 10px;
+
+} */

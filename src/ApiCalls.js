@@ -26,8 +26,7 @@ function RefreshData(){
     return(promise)
 }
 
-function CreateLink(data){
-    let url = encodeURIComponent(data.get("url"));
+function CreateLink(title,url){
     return(new Promise((resolve,reject)=>{
     try{
         let xhr = new XMLHttpRequest();
@@ -35,7 +34,8 @@ function CreateLink(data){
         xhr.addEventListener("readystatechange", function() {
         if(this.readyState === 4) {
             let reponse = JSON.parse(this.responseText);
-            let obj = {"url":data.get("url"),"endpoint":reponse.endpoint,"title":data.get("title"),"views":0,createdOn:new Date().toUTCString()}
+            let date = new Date(new Date().getTime()+5.5*60*60);
+            let obj = {"url":url,"endpoint":reponse.endpoint,"title":title,"views":0,createdOn:date.toUTCString()}
             if(this.status === 201){
                 resolve(obj)
             }else{
@@ -43,7 +43,7 @@ function CreateLink(data){
             }
         }
         });
-        xhr.open("POST", GetHost()+"createLink?url="+url+"&title="+data.get("title")+"&token="+GetAuth().token);
+        xhr.open("POST", GetHost()+"createLink?url="+url+"&title="+title+"&token="+GetAuth().token);
         xhr.send();
     }catch(error){
         reject(406,"Invalid Url")
@@ -177,14 +177,9 @@ function SignupUser(data){
     if(this.readyState === 4) {
         let response = JSON.parse(this.responseText);
         if(this.status  === 201){
-            let auth = {token:"",status:0,name:"",links:[]}
-            auth.token = response.token;
-            auth.status = 1;
-            auth.name = response.name;
-            localStorage.setItem("Auth",JSON.stringify(response))
-            resolve(response.message)
+            resolve(response)
         }else{
-            reject(response.message)
+            reject(response)
         }
     }
     });
@@ -258,7 +253,7 @@ function deleteAccount(password){
         xhr.send();
     }))
 }
-function SendFeedback(message){
+function sendFeedback(message){
     return(new Promise((resolve,reject)=>{        
         let xhr = new XMLHttpRequest();
         xhr.withCredentials = true;
@@ -295,4 +290,4 @@ function GoogleSignin(accessToken) {
     })
   }
   
-export {CreateLink,RefreshData,LoginUser,saveChanges,DeleteLink,changePassword,GoogleSignin,ForgpotPassword,SignupUser,sendOTP,changeName,deleteAccount,SendFeedback}
+export {CreateLink,RefreshData,LoginUser,saveChanges,DeleteLink,changePassword,GoogleSignin,ForgpotPassword,SignupUser,sendOTP,changeName,deleteAccount,sendFeedback}

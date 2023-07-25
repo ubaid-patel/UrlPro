@@ -1,6 +1,6 @@
 import { displayOneByOne, GetAuth } from "./AppConfig"
 import { CreateLink } from "./ApiCalls";
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DeleteLink } from "./ApiCalls";
 import UserLink from "./UserLink";
@@ -8,14 +8,30 @@ import { mainstore } from "./index";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAuth, updateAuth, updateLinks } from "./reducers/authSlice";
 import { RefreshData } from "./ApiCalls";
-
+import { useMediaQuery } from "react-responsive";
+import UserLinkMobile from "./UserLinkMobile";
+import styles from './css/linkManagement.module.css'
+import Message from "./Message";
 
 function LinksManagement() {
+    const resultRef = useRef(null)
+    const urlRef = useRef(null)
+    const titleRef = useRef(null)
+    const btnLoaderRef = useRef(null)
+    const messageRef = useRef(null)
+
+    //check device
+    const isMobileDevice = useMediaQuery({ query: '(max-width:600px)' });
+
     const auth = useSelector(selectAuth);
     const alllinks = auth.links;
     const dispatch = useDispatch();
+
+    const [messageType,setMessageType] = useState('SUCCESS');
     const [sortOption, setSortOption] = useState("date");
     const [sortType, setSortType] = useState("ascending");
+    const[message,setMessage]=useState({type:"",content:"",visible:false})
+
     useEffect(() => {
         if (sortType !== 'descending' && document.getElementById(sortOption + "Arrow").classList.contains("upwardArrowRotate")) {
             setSortType("descending");
@@ -26,9 +42,9 @@ function LinksManagement() {
         }
     }, [sortOption])
 
-    useEffect(()=>{
-       dispatch(updateLinks(applySorting()))
-    },[sortType])
+    useEffect(() => {
+        dispatch(updateLinks(applySorting()))
+    }, [sortType])
 
     const applySorting = () => {
         const links = [...alllinks];
@@ -54,24 +70,22 @@ function LinksManagement() {
                 }
                 break;
         }
-        return(links)
+        return (links)
     }
     let Nav = useNavigate();
 
     function deleteLink(endpoint) {
-        if (window.confirm("Delete link for : " + alllinks.filter(link => link.endpoint === endpoint)[0].url)) {
-            DeleteLink(endpoint).then(
-                () => {
-                    let newlinks = alllinks.filter(link => link.endpoint !== endpoint)
-                    dispatch(updateLinks(newlinks))
-                },
-                (response) => {
-                    if (response.status === 401) {
-                        Nav("/SessionExpired")
-                    }
+        DeleteLink(endpoint).then(
+            () => {
+                let newlinks = alllinks.filter(link => link.endpoint !== endpoint)
+                dispatch(updateLinks(newlinks))
+            },
+            (response) => {
+                if (response.status === 401) {
+                    Nav("/SessionExpired")
                 }
-            )
-        }
+            }
+        )
     }
 
     function sortLinks(from) {
@@ -82,7 +96,7 @@ function LinksManagement() {
             } else {
                 setSortType("ascending")
             }
-            
+
         } else if (sortOption === 'views' && from === "fromViews") {
 
             const toggled = document.getElementsByClassName("upwardArrow").item(1).classList.toggle("upwardArrowRotate");
@@ -91,6 +105,44 @@ function LinksManagement() {
             } else {
                 setSortType("ascending")
             }
+        }
+    }
+
+    function createlink() {
+        const[title,url]=[titleRef.current.value,urlRef.current.value]
+        const isPresent = alllinks.some(link=>link.title === title && link.url == url)
+
+        const urlRegex = /^(?:(ftp|http|https):\/\/)?[^ "]+\.[^ "]{2,}\/?[^\s]*$/;
+        if (urlRegex.test(urlRef.current.value)) {
+            btnLoaderRef.current.style = "display:inline-block;"
+            if(isPresent){
+                setMessage({type:"SUCCESS",content:"Link already shortened!",visible:true}); 
+                btnLoaderRef.current.style = "display:none;"
+            }else{
+                
+                CreateLink(title,url).then(
+                    (obj) => {
+                        let linksCopy = [...alllinks];
+                        linksCopy.unshift(obj);
+                        dispatch(updateLinks(linksCopy));
+                        setMessage({type:"SUCCESS",content:"Link shortned!",visible:true});
+                        // messageRef.current.innerHtml ="s";
+                    },
+                    (response) => {
+                        if (response.status === 401) {
+                            Nav("/SessionExpired")
+                        } else {
+                            setMessage({type:"error",content:"Server down",visible:true});
+                        }
+                    }
+                ).finally(
+                    () => {
+                        btnLoaderRef.current.style = "display:none;"
+                    }
+                )
+            }
+        } else {
+            setMessage({type:"error",content:"Invalid Url!",visible:true});
         }
     }
 
@@ -104,40 +156,15 @@ function LinksManagement() {
                         links always lead to the right place by editing their destination URLs.
                     </h3>
                     <div style={{ fontSize: "28px", marginBottom: "40px", boxShadow: "none", backgroundColor: "#ffffff00" }}>
-                        <p id="result"></p>
-                        <form method="post" name="short" onSubmit={(e) => {
-                            e.preventDefault()
-                            let data = new FormData(e.target)
-                            const urlRegex = /^(ftp|http|https):\/\/[^ "]+\.[^ "]{2,}\/?[^\s]*$/;
-                            if (urlRegex.test(data.get("url"))) {
-                                document.getElementById("btnloader").style = "display:inline-block;"
-                                CreateLink(data).then(
-                                    (obj) => {
-                                        let linksCopy = [...alllinks];
-                                        linksCopy.unshift(obj);
-                                        dispatch(updateLinks(linksCopy));
-                                        displayOneByOne("Success", "result", 40, "success")
-                                    },
-                                    (response) => {
-                                        if (response.status === 401) {
-                                            Nav("/SessionExpired")
-                                        } else {
-                                            displayOneByOne(response.message, "result", 40, "failed")
-                                        }
-                                    }
-                                ).finally(
-                                    () => {
-                                        document.getElementById("btnloader").style = "display:none;"
-                                    }
-                                )
-                            } else {
-                                displayOneByOne("Invalid url", "result", 40, "failed")
-                            }
-                        }}>
-                            <input type="text" name="title" required className="inputText" placeholder="Url Title"></input><br />
-                            <input type="url" name="url" required className="inputText" placeholder="https://www.example.com" /><br />
-                            <button type="submit" style={{ margin: "auto", marginBottom: "40px", marginTop: "30px", display: "flex", alignItems: "center", backgroundColor: "#bfbfcb70" }} className="Button">Short URL <div id="btnloader" className="smLoader smaller-cut hide"></div></button>
-                        </form>
+                        <div className={styles.message}>
+                            <Message message={message} setMessage={setMessage}/>
+                        </div>
+                        <input ref={titleRef} className={styles.inputText} placeholder="Url Title" /><br />
+                        <input ref={urlRef}type="url" className={styles.inputText} placeholder="https://www.example.com" /><br />
+                        <button className={styles.Button} onClick={createlink}>
+                            Short URL
+                            <div ref={btnLoaderRef} className={styles.smLoader}></div>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -161,19 +188,17 @@ function LinksManagement() {
                             }
                         }} className="sync" style={{ textAlign: "center" }}></img>
                         <h1 className="centerText HomecrdMnuHed" style={{ maxWidth: "none", display: "inline-block", textAlign: "center" }}>Shorted Urls</h1>
-
-
                     </div>
                 </div>
                 <div className="HomeCardMenuFlex">
+                <div className="searchBar">
+                        <img src="static/search.png" id="searchIcon"></img>
+                        <input type="text" placeholder="search" />
+                    </div>
                     <img src="static/sort.svg" className="sort" onClick={() => {
                         document.getElementsByClassName("sortOption").item(0).classList.toggle("showSortOption")
                         document.getElementsByClassName("sortOption").item(1).classList.toggle("showSortOption")
                     }} style={{ textAlign: "center" }}></img>
-                    <div className="searchBar">
-                        <img src="static/search.png" id="searchIcon"></img>
-                        <input type="text" placeholder="search" />
-                    </div>
                     <div>
                     </div>
                     <div className="sortOptions">
@@ -190,14 +215,23 @@ function LinksManagement() {
 
                 </div>
 
-               
-                    {
-                        (alllinks.length > 0) ?
-                            alllinks.map((link, index) => {
-                                // console.log(`Link ${link.title}: ${link.url}`);
-                                return <UserLink key={link.endpoint} link={link} deleteLink={deleteLink}></UserLink>
-                            }) : <UserLink key={"0000"} link={{ endpoint: "KKAJ00", url: "https://example.com", title: "Title", views: 900 }} deleteLink={deleteLink}></UserLink>
-                    }
+                <table className="LinksTable">
+                    <tbody>
+                        {/** Rendering links based on device**/
+                            (isMobileDevice) ? (alllinks.length > 0) ?
+                                alllinks.map((link, index) => <UserLinkMobile key={link.endpoint} link={link} deleteLink={deleteLink}></UserLinkMobile>) :
+                                <UserLinkMobile key={"0000"}
+                                    link={{ endpoint: "KKAJ00", url: "https://example.com", title: "Title", views: 900 }}
+                                    deleteLink={deleteLink}>
+                                </UserLinkMobile> : (alllinks.length > 0) ?
+                                alllinks.map((link, index) => <UserLink key={link.endpoint} link={link} deleteLink={deleteLink}></UserLink>) :
+                                <UserLink key={"0000"}
+                                    link={{ endpoint: "KKAJ00", url: "https://example.com", title: "Title", views: 900 }}
+                                    deleteLink={deleteLink}>
+                                </UserLink>
+                        }
+                    </tbody>
+                </table>
             </div>
         </>
     )

@@ -1,0 +1,28 @@
+.Users,.FeedBacks{
+    padding: 20px;
+    width: 90%;
+    min-height: 300px;
+    max-height: 300px;
+    background-color: #e5ebfc7c;
+    margin: auto;
+    border-radius: 20px;
+    box-shadow: 0 8px 13px 5px rgba(2, 2, 2, 0.819);
+    margin-top: 50px;
+    text-align: center;
+    overflow-y: auto;
+}
+.Users table{
+    margin: auto;
+}
+.Users td{
+    padding: 5px;
+}
+.FeedBacks h3,.FeedBacks h4{
+    text-align: left;
+    margin: 2px;
+    margin-left: 30px;
+}
+.FeedBacks p{
+    text-align: left;
+    margin-left: 50px;
+}

@@ -1,0 +1,99 @@
+.inputText{
+    
+    outline: none;
+    border: none;
+    padding-left: 5px;
+    border-bottom: 2px solid;
+    border-radius: 5px;
+    font-size: 18px;
+    color: #2c2f36;
+    background-color: #00000000;
+    margin-top: 20px;
+    width: 250px;
+    box-sizing: border-box;
+    display: inline-block;
+    text-align:left;
+    padding-left: 10px;
+}
+.Button{
+    margin: auto;
+    margin-top: 25px;
+    margin-bottom: 40px;
+    font-size: 17px;
+    height: 30px;
+    border: 1px solid;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    background-color: #bfbfcb70;
+}
+
+.Button:hover{
+    transition: 0.3s;
+    transform: scale(1.01);
+    box-shadow: 2px 2px 8px 0 #000000;
+}
+
+.smLoader {
+    display: none;
+    margin-left: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px dotted black;
+    border-right-color: white;
+    background-color: white;
+    animation: loader 1s infinite linear;
+    box-sizing: border-box; /* added to account for border width in width/height */
+}
+
+
+.message{
+    height: 30px;
+    width: 250px;
+    margin: auto;
+    font-size: small;
+    text-align: left;
+}
+@media only screen and (max-width: 600px) {
+    .message{
+        width: 98%;
+    }
+ 
+}
+.message div{
+   flex: 1;
+}
+
+.message img{
+    height: 70%;
+    padding-top: 2px;
+    float: inline-end;
+    height: 100%;
+    transform: scale(1);
+}
+
+.errorMessage button{
+
+}
+.error{
+    background-color: #f8c4c4;
+    color: #5e0808;
+}
+.success{
+    background-color: #cdf6ca;
+    color: #0c4104;
+    transition: 0.3s;
+    transform: scale(1);
+}
+.expandMessage{
+    transition: 0.3s;
+    transform: scale(1);
+}
+
+/* For Mobile Devices */
+@media only screen and (max-width: 650px) {
+    .inputText{
+        width: 100%;
+    }
+}

@@ -1,0 +1,45 @@
+.message{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    text-align: inherit;
+    font-size: inherit;
+    border-radius: 3px;
+    padding: 5px 5px 5px 10px;
+    overflow: hidden;
+    transform: scale(0);
+}
+.animateMessage{
+    transition: .3s;
+    transform:scale(1);
+}
+.message div{
+   flex: 1;
+}
+
+
+.message svg{
+    display: inline-block;
+    height: 70%;
+    padding-top: 2px;
+    height: 100%;
+}
+.success{
+    color: #072c01;
+    background-color: #acf4a1da;
+}
+.success svg{
+    stroke: #072c01;
+    stroke-width: 50;
+}
+
+.error{
+    background-color: #f8c4c4;
+    color: #5e0808;
+}
+.error svg{
+    stroke: #5e0808;
+    stroke-width: 60;
+}
+

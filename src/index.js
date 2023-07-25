@@ -12,7 +12,7 @@ import ForgotPassword from './ForgotPassword';
 import LogoutUser from './Logout';
 import DashBoard from './DashBoard';
 import Settings from './Settings';
-import Feedback from './Feedback';
+import SendFeedback from './SendFeedback';
 import Loading from './Loading';
 import Admin from './Admin';
 import SessionExpired from './SessionExpired';
@@ -22,10 +22,14 @@ import { createStore } from 'redux';
 import LinksManagement from './LinksManagement';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
+import CancelSvg from './CancelSvg';
+import { LoginSocialGoogle } from 'reactjs-social-login';
+import { GoogleOAuthProvider } from '@react-oauth/google';
  
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+      <GoogleOAuthProvider clientId='1073579154631-nr0b438d5sqljlqfjkiev25ujshf3cs2.apps.googleusercontent.com'>
 <Provider store={store}>
       <BrowserRouter>
       <TopNav/>
@@ -36,7 +40,7 @@ root.render(
                   <Route path="/loading" element={<Loading/>} />
                   <Route path="/dashboard" element={<DashBoard   />} />
                   <Route path="/settings" element={<Settings/>} />
-                  <Route path="/feedback" element={<Feedback/>} />
+                  <Route path="/feedback" element={<SendFeedback/>} />
                   <Route path="/signup" element={<Signup/>} />
                   <Route path="/logout" element={<LogoutUser/>} />
                   <Route path="/sessionExpired" element={<SessionExpired/>} />
@@ -44,6 +48,7 @@ root.render(
             </Routes>
       </BrowserRouter>
 </Provider>
+</GoogleOAuthProvider>
 )
 
 

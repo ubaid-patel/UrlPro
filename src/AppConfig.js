@@ -14,17 +14,16 @@ function GetAuth(){
         feedbacks:undefined,
         })
    }
-   function displayOneByOne(str, id, time, type = "success") {
+   function displayOneByOne(str, ref, time, type = "success") {
     let i = 0;
-    const el = document.getElementById(id);
     
     if (type === "success") {
-      el.style = "display:block;margin:0px;color:green";
+      ref.current.style = "display:block;margin:0px;color:green";
     } else {
-      el.style = "display:block;margin:0px;color:red";
+      ref.current.style = "display:block;margin:0px;color:red";
     }
     
-    el.innerHTML = "";
+    ref.current.innerHTML = "";
     
     return new Promise(resolve => {
       const intervalId = setInterval(() => {
@@ -32,7 +31,7 @@ function GetAuth(){
           clearInterval(intervalId);
           resolve();
         } else {
-          el.innerHTML += str.charAt(i);
+          ref.current.innerHTML += str.charAt(i);
           i++;
         }
       }, time);
@@ -51,4 +50,20 @@ return(
     feedbacks:[],}
 )  
 }
-export {GetAuth,GetHost,displayOneByOne}
+
+//Converting Date to IST
+const convertDateToIST=(utcdateString)=>{
+  const timestamp = new Date(utcdateString).getTime();
+
+  // Calculate the offset for IST (GMT+5:30)
+  const offset = 5.5 *( 60 * 60 );
+
+  // Create a new Date object for the IST date and time
+  const istDate = new Date(timestamp + offset);
+
+  // Format the IST date and time
+  const istDateString = istDate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+
+  return(istDateString); // 7/13/2023, 6:32:28 PM
+}
+export {GetAuth,GetHost,displayOneByOne,convertDateToIST}
