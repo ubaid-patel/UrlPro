@@ -19,36 +19,36 @@ const Login = () => {
     MainContRef.current.classList.add(styles.showMainCont)
   }, [])
 
-  function LoginWithPassword(event){
-      event.preventDefault();
-      loaderRef.current.classList.add(styles.visible);
+  function LoginWithPassword(event) {
+    event.preventDefault();
+    loaderRef.current.classList.add(styles.visible);
 
-      let data = new FormData(event.target);
-      LoginUser(data.get("email"), data.get("password")).then(
-        (response) => {
-          loaderRef.current.classList.remove(styles.visible)
-          localStorage.setItem("Token", response.token)
-          displayOneByOne(response.message, loginResult, 40, "success").then(() => {
-            setTimeout(() => {
-              nav("/Dashboard")
-              dispatch(updateAuth(response))
-            }, 500)
-          })
-        },
-        (response) => {
-          loaderRef.current.classList.remove(styles.visible)
-          displayOneByOne(response.message, loginResult, 40, "failed")
-        }
-      )
-    }
+    let data = new FormData(event.target);
+    LoginUser(data.get("email"), data.get("password")).then(
+      (response) => {
+        loaderRef.current.classList.remove(styles.visible)
+        localStorage.setItem("Token", response.token)
+        displayOneByOne(response.message, loginResult, 40, "success").then(() => {
+          setTimeout(() => {
+            nav("/Dashboard")
+            dispatch(updateAuth(response))
+          }, 500)
+        })
+      },
+      (response) => {
+        loaderRef.current.classList.remove(styles.visible)
+        displayOneByOne(response.message, loginResult, 40, "failed")
+      }
+    )
+  }
   const LoginWithGoogle = useGoogleLogin({
-    onSuccess:(data)=>{
+    onSuccess: (data) => {
       GoogleSignin(data.access_token).then(
-        (response)=>{
+        (response) => {
           dispatch(updateAuth(response));
           localStorage.Token = response.token;
         },
-        (response)=>{
+        (response) => {
           console.log(response.message)
         }
       )
@@ -60,11 +60,13 @@ const Login = () => {
       <div className={`${styles.statusBar} ${styles.statusBarRun}`}></div>
       <div ref={MainContRef} className={styles.MainCont}>
         <div className={styles.forms}>
-          {(window.location.pathname === '/sessionExpired')?
-          <React.Fragment>
-            
-          </React.Fragment>
-          :<React.Fragment></React.Fragment>}
+          {/* Displays session expired message if pathname is session expired */}
+          {(window.location.pathname.toUpperCase() === '/SESSIONEXPIRED') ?
+            <React.Fragment>
+              <img src='static/clock.svg'></img>
+              <h4>Session Expired Please Relogin</h4>
+            </React.Fragment>
+            : <React.Fragment></React.Fragment>}
           <h4 ref={loginResult}></h4>
           <form onSubmit={LoginWithPassword}>
             <input type="email" required name="email" placeholder="Enter Email" className={styles.inputText} />
@@ -74,7 +76,7 @@ const Login = () => {
             <Link to="/forgotPassword" className={styles.Links}>Forgot password?</Link>
             <Link to="/signup" className={styles.Links}>Dont have an account?</Link>
           </form>
-          <div id="googleLogin" onClick={LoginWithGoogle}><img src="/static/google.svg" /> Continue with google</div>
+          <div id={styles.googleLogin} onClick={LoginWithGoogle}><img src="/static/google.svg" /> Continue with google</div>
         </div>
       </div>
     </React.Fragment>

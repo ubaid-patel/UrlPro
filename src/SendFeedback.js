@@ -1,4 +1,3 @@
-import "./css/settings.css"
 import { useEffect,useRef } from "react";
 import React from "react";
 import { sendFeedback } from "./ApiCalls";

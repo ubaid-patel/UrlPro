@@ -1,10 +1,9 @@
 import { displayOneByOne, GetAuth } from "./AppConfig"
 import { CreateLink } from "./ApiCalls";
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DeleteLink } from "./ApiCalls";
 import UserLink from "./UserLink";
-import { mainstore } from "./index";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAuth, updateAuth, updateLinks } from "./reducers/authSlice";
 import { RefreshData } from "./ApiCalls";
@@ -18,32 +17,45 @@ function LinksManagement() {
     const urlRef = useRef(null)
     const titleRef = useRef(null)
     const btnLoaderRef = useRef(null)
-    const messageRef = useRef(null)
+    const messageRef = useRef(null),
+        dateArrowRef = useRef(null),
+        viewsArrowRef = useRef(null);
 
     //check device
     const isMobileDevice = useMediaQuery({ query: '(max-width:600px)' });
 
     const auth = useSelector(selectAuth);
-    const alllinks = auth.links;
+    const [alllinks,setAllLinks] = useState([...auth.links]);
     const dispatch = useDispatch();
+    const dateOptRef = useRef(null);
+    const viewsOptRef = useRef(null);
 
-    const [messageType,setMessageType] = useState('SUCCESS');
+    const [messageType, setMessageType] = useState('SUCCESS');
     const [sortOption, setSortOption] = useState("date");
     const [sortType, setSortType] = useState("ascending");
-    const[message,setMessage]=useState({type:"",content:"",visible:false})
-
-    useEffect(() => {
-        if (sortType !== 'descending' && document.getElementById(sortOption + "Arrow").classList.contains("upwardArrowRotate")) {
-            setSortType("descending");
-            dispatch(updateLinks(applySorting()))
-        } else if (sortType == 'descending' && !document.getElementById(sortOption + "Arrow").classList.contains("upwardArrowRotate")) {
-            dispatch(updateLinks(applySorting()))
-            setSortType("ascending");
+    const [message, setMessage] = useState({ type: "", content: "", visible: false })
+    useEffect(()=>{
+        setAllLinks(auth.links)
+    },[auth])
+    function getSortType() {
+        let elem;
+        if (sortOption === 'date') {
+            elem = dateArrowRef.current;
+        } else {
+            elem = viewsArrowRef.current;
         }
+        if (elem.classList.contains(styles.downArrowRotate)) {
+            return ('descending')
+        } else {
+            return ('ascending')
+        }
+    }
+    useEffect(() => {   
+        setSortType(getSortType());
     }, [sortOption])
-
+ 
     useEffect(() => {
-        dispatch(updateLinks(applySorting()))
+        setAllLinks(applySorting())
     }, [sortType])
 
     const applySorting = () => {
@@ -52,10 +64,10 @@ function LinksManagement() {
             case 'date':
                 switch (sortType) {
                     case 'descending':
-                        links.sort((a, b) => new Date(a.createdOn) - new Date(b.createdOn));
+                        links.sort((a, b) => new Date(b.createdOn)-new Date(a.createdOn));
                         break;
                     case 'ascending':
-                        links.sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn));
+                        links.sort((a, b) => new Date(a.createdOn)-new Date(b.createdOn));
                         break;
                 }
                 break;
@@ -71,6 +83,11 @@ function LinksManagement() {
                 break;
         }
         return (links)
+    }
+    function PerformSearch(event){
+        let word = event.target.value.toLowerCase();
+        let links = [...auth.links]
+        setAllLinks(links.filter((obj)=>obj.title.toLowerCase().includes(word) || obj.url.toLowerCase().includes(word)))
     }
     let Nav = useNavigate();
 
@@ -90,7 +107,7 @@ function LinksManagement() {
 
     function sortLinks(from) {
         if (sortOption == 'date' && from === "fromDate") {
-            const toggled = document.getElementsByClassName("upwardArrow").item(0).classList.toggle("upwardArrowRotate");
+            const toggled = dateArrowRef.current.classList.toggle(styles.downArrowRotate);
             if (toggled == true) {
                 setSortType("descending");
             } else {
@@ -99,7 +116,7 @@ function LinksManagement() {
 
         } else if (sortOption === 'views' && from === "fromViews") {
 
-            const toggled = document.getElementsByClassName("upwardArrow").item(1).classList.toggle("upwardArrowRotate");
+            const toggled = viewsArrowRef.current.classList.toggle(styles.downArrowRotate);
             if (toggled == true) {
                 setSortType("descending");
             } else {
@@ -109,30 +126,30 @@ function LinksManagement() {
     }
 
     function createlink() {
-        const[title,url]=[titleRef.current.value,urlRef.current.value]
-        const isPresent = alllinks.some(link=>link.title === title && link.url == url)
+        const [title, url] = [titleRef.current.value, urlRef.current.value]
+        const isPresent = alllinks.some(link => link.title === title && link.url == url)
 
         const urlRegex = /^(?:(ftp|http|https):\/\/)?[^ "]+\.[^ "]{2,}\/?[^\s]*$/;
         if (urlRegex.test(urlRef.current.value)) {
             btnLoaderRef.current.style = "display:inline-block;"
-            if(isPresent){
-                setMessage({type:"SUCCESS",content:"Link already shortened!",visible:true}); 
+            if (isPresent) {
+                setMessage({ type: "SUCCESS", content: "Link already shortened!", visible: true });
                 btnLoaderRef.current.style = "display:none;"
-            }else{
-                
-                CreateLink(title,url).then(
+            } else {
+
+                CreateLink(title, url).then(
                     (obj) => {
                         let linksCopy = [...alllinks];
                         linksCopy.unshift(obj);
                         dispatch(updateLinks(linksCopy));
-                        setMessage({type:"SUCCESS",content:"Link shortned!",visible:true});
+                        setMessage({ type: "SUCCESS", content: "Link shortned!", visible: true });
                         // messageRef.current.innerHtml ="s";
                     },
                     (response) => {
                         if (response.status === 401) {
                             Nav("/SessionExpired")
                         } else {
-                            setMessage({type:"error",content:"Server down",visible:true});
+                            setMessage({ type: "error", content: "Server down", visible: true });
                         }
                     }
                 ).finally(
@@ -142,98 +159,92 @@ function LinksManagement() {
                 )
             }
         } else {
-            setMessage({type:"error",content:"Invalid Url!",visible:true});
+            setMessage({ type: "error", content: "Invalid Url!", visible: true });
         }
     }
 
+    const SyncData = (e) => {
+        if (localStorage.Token) {
+            e.target.style = 'animation-play-state: running;';
+            RefreshData().then(
+                (data) => {
+                    dispatch(updateAuth(data))
+                    localStorage.setItem("Token", data.token)
+                },
+                (message) => {
+                    Nav("/SessionExpired")
+                }
+            ).finally(() => {
+                e.target.style = 'animation-play-state: paused;'
+            })
+        }
+    }
+    function toggleShowOpts() {
+        dateOptRef.current.classList.toggle(styles.showSortOption)
+        viewsOptRef.current.classList.toggle(styles.showSortOption)
+    }
+     
     return (
-        <>
-            <div className="HomeCards" style={{ textAlign: "center", padding: "10px" }}>
-                <div>
-                    <h1 style={{ maxWidth: "none" }}>Create Links Instantly</h1>
-                    <h3 style={{ maxWidth: "none" }}>
-                        Log in to your account to save your URLs permanently and ensure that your
-                        links always lead to the right place by editing their destination URLs.
-                    </h3>
-                    <div style={{ fontSize: "28px", marginBottom: "40px", boxShadow: "none", backgroundColor: "#ffffff00" }}>
-                        <div className={styles.message}>
-                            <Message message={message} setMessage={setMessage}/>
+        <React.Fragment>
+            {/* Card of Create Links Form */}
+            <div className={styles.HomeCards}>
+                    <div className={styles.forms}>
+                    <h1>Create Links Instantly</h1>
+                    {(!auth.token ?
+                        <p>
+                            Log in to your account to save your URLs permanently and ensure that your links always lead to
+                            the right place by editing their destination URLs.
+                        </p> : <React.Fragment></React.Fragment>)}
+               
+                        <div className={styles.message} ref={messageRef}>
+                            <Message message={message} setMessage={setMessage} />
                         </div>
-                        <input ref={titleRef} className={styles.inputText} placeholder="Url Title" /><br />
-                        <input ref={urlRef}type="url" className={styles.inputText} placeholder="https://www.example.com" /><br />
+                        <input ref={titleRef} name="title" className={styles.inputText} placeholder="Url Title" /><br />
+                        <input ref={urlRef} name="url" className={styles.inputText} placeholder="https://www.example.com" /><br />
                         <button className={styles.Button} onClick={createlink}>
                             Short URL
                             <div ref={btnLoaderRef} className={styles.smLoader}></div>
                         </button>
                     </div>
                 </div>
-            </div>
-            <div className="HomeCards" style={{ padding: "10px" }}>
-                <div className="HomeCardMenu">
-                    <div className="HomeCardMenuFlex">
-                        <img src="static/sync.svg" onClick={(e) => {
-                            if (localStorage.Token) {
-                                e.target.style = 'animation-play-state: running;';
-                                RefreshData().then(
-                                    (data) => {
-                                        dispatch(updateAuth(data))
-                                        localStorage.setItem("Token", data.token)
-                                    },
-                                    (message) => {
-                                        Nav("/SessionExpired")
-                                    }
-                                ).finally(() => {
-                                    e.target.style = 'animation-play-state: paused;'
-                                })
-                            }
-                        }} className="sync" style={{ textAlign: "center" }}></img>
-                        <h1 className="centerText HomecrdMnuHed" style={{ maxWidth: "none", display: "inline-block", textAlign: "center" }}>Shorted Urls</h1>
+
+            {/* Card That Displays Links and all Options related to it like sort and search */}
+            <div className={styles.HomeCards}> 
+                    <div className={styles.HomeCardMenuFlex}>
+                        <img src="static/sync.svg" onClick={SyncData} className={styles.sync}></img>
+                        <h1 className={styles.HomecrdMnuHed}>Shorted links</h1>
                     </div>
-                </div>
-                <div className="HomeCardMenuFlex">
-                <div className="searchBar">
-                        <img src="static/search.png" id="searchIcon"></img>
-                        <input type="text" placeholder="search" />
+                <div className={styles.HomeCardMenuFlex}>
+                    <div className={styles.searchBar}>
+                        <img src="static/search.png" id={styles.searchIcon}></img>
+                        <input type="text" placeholder="search"  onChange={PerformSearch}/>
                     </div>
-                    <img src="static/sort.svg" className="sort" onClick={() => {
-                        document.getElementsByClassName("sortOption").item(0).classList.toggle("showSortOption")
-                        document.getElementsByClassName("sortOption").item(1).classList.toggle("showSortOption")
-                    }} style={{ textAlign: "center" }}></img>
-                    <div>
-                    </div>
-                    <div className="sortOptions">
-                        <div className="sortOption">
-                            <input type="radio" name="sort" onClick={() => { setSortOption("date") }} defaultChecked></input>
+                    <img src="static/sort.svg" className={styles.sort} onClick={toggleShowOpts} />
+                    <div className={styles.sortOptions}>
+                        <div className={styles.sortOption} ref={dateOptRef}>
+                            <input type="radio" name="sort" onClick={() => { setSortOption("date") }} defaultChecked />
                             <span>Date</span>
-                            <img src="static/upwardArrow.svg" className="upwardArrow" id="dateArrow" onClick={() => { sortLinks("fromDate") }} style={{ textAlign: "center" }}></img>
+                            <img src="static/upwardArrow.svg" className={styles.upwardArrow} ref={dateArrowRef} onClick={() => { sortLinks("fromDate") }}></img>
                         </div>
-                        <div className="sortOption"> <input type="radio" name="sort" onClick={() => { setSortOption("views") }}></input>
+                        <div className={styles.sortOption} ref={viewsOptRef}>
+                            <input type="radio" name="sort" onClick={() => { setSortOption("views") }} />
                             <span>Views</span>
-                            <img src="static/upwardArrow.svg" id="viewsArrow" className="upwardArrow" onClick={() => { sortLinks("fromViews") }} style={{ textAlign: "center" }}></img>
+                            <img src="static/upwardArrow.svg" ref={viewsArrowRef} className={styles.upwardArrow} onClick={() => { sortLinks("fromViews") }} />
                         </div>
                     </div>
-
                 </div>
 
-                <table className="LinksTable">
+                <table className={styles.LinksTable}>
                     <tbody>
-                        {/** Rendering links based on device**/
-                            (isMobileDevice) ? (alllinks.length > 0) ?
-                                alllinks.map((link, index) => <UserLinkMobile key={link.endpoint} link={link} deleteLink={deleteLink}></UserLinkMobile>) :
-                                <UserLinkMobile key={"0000"}
-                                    link={{ endpoint: "KKAJ00", url: "https://example.com", title: "Title", views: 900 }}
-                                    deleteLink={deleteLink}>
-                                </UserLinkMobile> : (alllinks.length > 0) ?
-                                alllinks.map((link, index) => <UserLink key={link.endpoint} link={link} deleteLink={deleteLink}></UserLink>) :
-                                <UserLink key={"0000"}
-                                    link={{ endpoint: "KKAJ00", url: "https://example.com", title: "Title", views: 900 }}
-                                    deleteLink={deleteLink}>
-                                </UserLink>
+                        {/** Rendering links based on device and links length**/
+                            (alllinks.length=== 0 )?<h3>No Links Found</h3>:(isMobileDevice) ?
+                            alllinks.map((link, index) => <UserLinkMobile key={link.endpoint} link={link} deleteLink={deleteLink}></UserLinkMobile>)
+                            :alllinks.map((link, index) => <UserLink key={link.endpoint} link={link} deleteLink={deleteLink}></UserLink>)
                         }
                     </tbody>
                 </table>
             </div>
-        </>
+        </React.Fragment>
     )
 }
 export default LinksManagement;

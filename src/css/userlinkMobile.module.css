@@ -15,21 +15,33 @@
 
 .errorMessage{
     position: absolute;
-    background-color: #f8c4c4;
-    color: #5e0808;
     width: max-content;
     right: 10px;
-    bottom:5px;
+    bottom:7px;
     height: 70%;
     width: 40%;
     text-align: left;
     font-size: small;
     border-radius: 3px;
-    padding: 5px 5px 5px 10px;
-    overflow: hidden;
-    transform: scale(0);
+    padding: 5px 5px 5px 10px;   
 }
-
+.sortOption span{
+    color: black;
+    margin:0px;
+}
+.sortOption{
+    background-color: rgb(205, 205, 205);
+    display: flex;
+    border: 1px solid black;
+    text-align: center;
+    flex-direction: row;
+    align-items: center;
+   justify-content: center;
+   
+   border-radius: 2px;
+   transition: 0.4s;
+   animation: goingUp 0.4s linear 0s 1 normal forwards;
+}
 .errorMessage img{
     float: right;
     position: relative;
@@ -78,10 +90,7 @@
     transition: 0.2s ease-in background-color;
         background-color: #b74747;
 }
-.confirmDelete{
-    width: 40% !important;
-   
-}
+ 
 .confirmDelete img{
     height: 30px;
     filter: invert();
@@ -155,7 +164,6 @@
 
  
 .moreOptions ul,.moreOptions li{
-     
     font-size: medium;
     list-style-type:none;
     margin: 0px;
@@ -163,11 +171,11 @@
 }
 
 .moreOptions,.confirmDelete{
-    width:30%;
+    width:50%;
     overflow: hidden;
     position: absolute;
     bottom: 40px;
-    right: 32%;
+    right: 25%;
     transition: 0.5s ease-out;
     max-height: 0px;
     z-index: 200;

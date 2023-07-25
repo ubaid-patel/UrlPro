@@ -16,7 +16,7 @@ function RefreshData(){
                     }
                 }
                 });
-                xhr.open("POST", GetHost()+"RefreshData?token="+GetAuth().token);
+                xhr.open("POST", GetHost()+"RefreshData?token="+localStorage.Token);
                 // console.log(GetAuth().token)
                 xhr.send();
             }catch(error){
@@ -79,7 +79,6 @@ function saveChanges(endpoint,title,url){
         xhr.withCredentials = true;
         xhr.addEventListener("readystatechange", function() {
         if(this.readyState === 4) {
-            document.getElementById("btnloader").style="display:none;"
             let response = JSON.parse(this.responseText)
             let auth = GetAuth();
             auth.links.forEach((link,index) => {

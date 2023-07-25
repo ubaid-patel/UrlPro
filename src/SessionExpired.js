@@ -22,13 +22,7 @@ function SessionExpired() {
   }, [])
   let Nav = useNavigate();
   return (
-    <React.Fragment>
-      <div className={styles.Container}>
-        <img src='static/clock.svg'></img>
-        <h4>Session Expired Please Relogin</h4>
-      </div>
       <Login />
-    </React.Fragment>
   )
 }
 export default SessionExpired;

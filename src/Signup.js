@@ -180,7 +180,7 @@ const Signup = () => {
             </form>
           )}
           <Link to="/login" className={styles.Links}>Already have an account? Login</Link>
-          <div id="googleLogin" onClick={SignupWithGoogle}><img src="/static/google.svg" /> Continue with google</div>
+          <div id={styles.googleLogin} onClick={SignupWithGoogle}><img src="/static/google.svg" /> Continue with google</div>
         </div>
       </div>
     </React.Fragment>

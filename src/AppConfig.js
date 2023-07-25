@@ -66,4 +66,8 @@ const convertDateToIST=(utcdateString)=>{
 
   return(istDateString); // 7/13/2023, 6:32:28 PM
 }
-export {GetAuth,GetHost,displayOneByOne,convertDateToIST}
+const GetLogo=()=>{
+  let logo = ""
+  return(logo)
+}
+export {GetAuth,GetHost,displayOneByOne,convertDateToIST,GetLogo}

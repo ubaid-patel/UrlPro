@@ -14,7 +14,7 @@ function Message({ message, setMessage }) {
         }
     })
     return (
-        (message.visible ? <div ref={contRef} className={`${styles.message} ${(message.type === 'SUCCESS' ? styles.success : styles.error)}
+        (message.visible ? <div ref={contRef} className={`${styles.message} ${(message.type.toUpperCase() === 'SUCCESS' ? styles.success : styles.error)}
         `} onClick={() => {
                 clearTimeout(messageTimeout)
                 setMessage({ ...message, visible: false })

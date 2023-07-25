@@ -17,9 +17,19 @@
     transform: scale(.9);
     transition: .3s;
 }
-.dash{
-    
+.visible{
+    animation: showall .5s infinite forwards;
+    animation-iteration-count: 1;
 }
+@keyframes showall {
+    0%{
+        opacity: 0.5;
+    }100%{
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 .flex{
     display: flex;
     align-items: center;
@@ -51,4 +61,24 @@ body {
 h1{
     text-align: center;
 }
- 
+ @media  only screen and (max-width:650px) {
+    .flex{
+        display: block;
+    }
+    .DashCards {  
+        width: 90%;
+        min-width: 75%;
+        height: max-content;
+        padding: 20px 10px;
+        
+        min-height: 0px;
+    }
+    .DashCards h1{
+        padding: 0px;
+        margin: 0px;
+    }
+    .DashCards h1:first-child{
+        margin-bottom: 5px;
+    }
+    
+ }

@@ -60,3 +60,7 @@ hr{
 .settingsCard{
     padding-bottom: 20px;
 }
+input::placeholder{
+    font-size: inherit;
+    color: inherit;
+}

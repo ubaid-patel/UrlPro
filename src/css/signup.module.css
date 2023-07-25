@@ -209,20 +209,20 @@ h2{
     width: 15px;
 }
 
-.googleLogin {
-    margin-top: 10px;
-    border: 1px solid #ffffff00;
-    display: flex;
+#googleLogin {
     align-items: center;
-    width: max-content;
-    margin: auto;
     background-color: #e7e7e700;
+    border: 1px solid #ffffff00;
     border-radius: 5px;
+    display: flex;
+    margin: auto;
     padding-right: 10px;
-    transition: 0.5s;
+    transition: .5s;
+    width: -webkit-max-content;
+    width: max-content;
 }
 
-.googleLogin:hover {
+#googleLogin:hover {
     background-color: #91909054;
     border: 1px solid;
     transform: scale(1.02);
@@ -243,9 +243,8 @@ h2{
     }
 }
 
-@media only screen and (max-width: 600px) {
-    .forms {
+@media only screen and (max-width: 600px){
+    .form {
         width: 80%;
-    }
-
-}
+    
+}}

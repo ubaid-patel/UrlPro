@@ -1,7 +1,8 @@
 .message{
     height: 100%;
-    width: 100%;
+    width: 90%;
     display: flex;
+    margin: auto;
     align-items: center;
     text-align: inherit;
     font-size: inherit;

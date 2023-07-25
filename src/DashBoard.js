@@ -15,7 +15,7 @@ function DashBoard() {
 
     //the below code will perform userLoggenin checkup and some animations
     useEffect(() => {
-        maincomp.current.classList.add("visible")
+        maincomp.current.classList.add(styles.visible)
         if (auth.token === undefined) {
             
         } else {

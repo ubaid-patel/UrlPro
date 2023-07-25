@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { saveChanges } from "./ApiCalls";
 import React from "react";
 import styles from './css/userlinkMobile.module.css'
+import Message from "./Message";
 const UserLinkMobile = ({ link, deleteLink }) => {
     const nav = useNavigate();
 
@@ -12,6 +13,7 @@ const UserLinkMobile = ({ link, deleteLink }) => {
     const moreOptsRef = useRef(null);
     const infoRef = useRef(null);
     const messageRef = useRef(null);
+    const [message,setMessage] = useState({visible:false,content:"",type:'success'})
 
     //logic and state that makes link and title editable
     const [isEditable, setEditable] = useState(false);
@@ -69,6 +71,32 @@ const UserLinkMobile = ({ link, deleteLink }) => {
         document.execCommand('copy');
         document.body.removeChild(input);
     }
+    const handleSave = () => {
+        let title = titleRef.current.value;
+        let url = linkRef.current.value;
+        const urlRegex = /^(ftp|http|https):\/\/[^ "]+\.[^ "]{2,}\/?[^\s]*$/;
+        if(!title.trim() == ''){
+            if (urlRegex.test(url)) {
+                saveChanges(link.endpoint, title, url).then(
+                    (value) => {
+                        setEditable(false)
+                    },
+                    (status, message) => {
+                        if (status === 401) {
+                            nav("/SessionExpired")
+                        } else {
+                            console.log(message)
+                        }
+                    }
+                )
+            } else {
+                setMessage({visible:true,content:"Invalid Url",type:"error"})
+            }
+        }
+        else{
+            setMessage({visible:true,content:"Invalid title",type:"error"})
+        }
+    }
     return (
         <React.Fragment>
             {/* title input */}
@@ -81,12 +109,8 @@ const UserLinkMobile = ({ link, deleteLink }) => {
             <tr>
                 <td colSpan={2} style={{ position: 'relative' }}>
                     {/* Error message */}
-                    <div className={styles.errorMessage} ref={messageRef} onClick={() => {
-                        messageRef.current.classList.remove(styles.expandMessage)
-                    }}>
-                        Invalid url. <img src="static/close.svg" onClick={() => {
-                            messageRef.current.classList.remove(styles.expandMessage)
-                        }} />
+                    <div className={styles.errorMessage} ref={messageRef}>
+                        <Message message={message} setMessage={setMessage}></Message>
                     </div>
                     <input type="text" className={styles.input} defaultValue={link.url} ref={linkRef} disabled />
                 </td>
@@ -138,28 +162,7 @@ const UserLinkMobile = ({ link, deleteLink }) => {
                             </ul>
                         </div>)}
                     {(isEditable ?
-                        <button className={`${styles.actbtn} ${styles.savebtn}`} onClick={
-                            () => {
-                                let title = titleRef.current.value;
-                                let url = linkRef.current.value;
-                                const urlRegex = /^(ftp|http|https):\/\/[^ "]+\.[^ "]{2,}\/?[^\s]*$/;
-                                if (urlRegex.test(url)) {
-                                    saveChanges(link.endpoint, title, url).then(
-                                        (value) => {
-                                            setEditable(false)
-                                        },
-                                        (status, message) => {
-                                            if (status === 401) {
-                                                nav("/SessionExpired")
-                                            } else {
-                                                console.log(message)
-                                            }
-                                        }
-                                    )
-                                } else {
-                                    messageRef.current.classList.add(styles.expandMessage)
-                                }
-                            }}>
+                        <button className={`${styles.actbtn} ${styles.savebtn}`} onClick={handleSave}>
                             <img src="/static/save.png" />
                         </button> :
                         <button onClick={() => { (isMoreOptsVisible ? setMoreOptsVisible(false) : setMoreOptsVisible(true)) }} className={styles.actbtn}>

@@ -139,17 +139,17 @@ h1{
     margin-top: 15px;
     margin-bottom: 10px;
 }
-.googleLogin{
-    margin-top: 10px;
-    border: 1px solid #ffffff00;
-    display: flex;
+#googleLogin {
     align-items: center;
-    width: max-content;
-    margin: auto;
     background-color: #e7e7e700;
+    border: 1px solid #ffffff00;
     border-radius: 5px;
+    display: flex;
+    margin: auto;
     padding-right: 10px;
-    transition: 0.5s;
+    transition: .5s;
+    width: -webkit-max-content;
+    width: max-content;
 }
 .MainCont{
     opacity: 0;
@@ -169,7 +169,7 @@ h1{
     }
 }
 
-.googleLogin:hover{
+#googleLogin:hover{
     background-color: #91909054;
     border: 1px solid;
     transform: scale(1.02);

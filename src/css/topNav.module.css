@@ -1,0 +1,146 @@
+#TopNav {
+    display: block;
+    background-color: #221e1e;
+    box-shadow: 0 7px 7px rgba(54, 52, 52, .752);
+    height: 80px;
+    width: 100%;
+}
+
+#logo {
+    display: inline;
+    height: 60px;
+    margin-left: 30px;
+    margin-right: 50px;
+    margin-top: 10px;
+}
+
+#buttons {
+    float: right;
+    margin-right: 20px;
+}
+
+.button {
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 17px;
+    height: 30px;
+    margin-top: 25px;
+    margin-right: 20px;
+    float: right;
+}
+
+.profileContainer {
+    width: 125px;
+    height: 175px;
+    position: absolute;
+    right: 30px;
+    top: 20px;
+    z-index: 56;
+}
+.Profile {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: #000000;
+    text-align: center;
+    font-size: 40px;
+    font-weight: -lighter;
+    color: white;
+    z-index: 1;
+}
+
+#userPicture,#userCircle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+}
+
+#userCircle {
+    filter: invert(1);
+}
+.hide {
+    display: none;
+}
+
+.profileMenu {
+    width: max-content;
+    height: max-content;
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    position: absolute;
+    right: 2px;
+    top: 50px;
+    z-index: 1;
+}
+.profileMenu ul,
+.profileMenu li {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+    padding: 5px 5px;
+}
+.profileMenu li:hover{
+    transition: .5s;
+    background-color: rgba(194, 181, 174, 0.765);
+}
+
+.profileMenu li {
+    margin-top: 10px;
+}
+ 
+.profileMenu ul {
+    padding: 0px;
+    border-radius:20px ;
+}
+.profileMenu li:first-child {
+    margin-top: 0px;
+}
+
+/* Responsive for mobile devices */
+@media only screen and (max-width: 650px) {
+    #TopNav {
+        background-color: #221e1e;
+        box-shadow: 0 7px 7px rgba(54, 52, 52, .752);
+        height: 90px;
+        width: 100%;
+    }
+
+    #logo {
+        margin: auto auto auto 10px;
+        max-width: 70%;
+        padding-top: 10px;
+
+    }
+
+    #buttons {
+        background-color: inherit;
+        margin-right: 10px;
+        margin-top: 15px;
+        width: 20%;
+    }
+
+    .button {
+        border: none;
+        display: block;
+        float: none;
+        margin: auto;
+        width: 100%;
+    }
+
+    .button:first-child {
+        margin-bottom: 7px;
+    }
+    .Profile{
+        max-width: 100%;
+    }
+    .profileContainer{
+        top: 12px;
+        right: 12px;
+    }
+}
