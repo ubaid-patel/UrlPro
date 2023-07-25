@@ -59,7 +59,7 @@ const UserLinkMobile = ({ link, deleteLink }) => {
         if (isMoreOptsVisible) {
             moreOptsRef.current.classList.add(styles.expandOpts)
         }
-    }, [isConfirmDelete])
+    }, [isConfirmDelete,isMoreOptsVisible])
 
     //Copy link using dom and execCommand
     function copyLink() {

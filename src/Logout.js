@@ -1,38 +1,32 @@
 import { displayOneByOne, initState } from "./AppConfig"
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { updateAuth } from "./reducers/authSlice";
+import styles from './css/login.module.css'
 function LogoutUser(){
-    let Nav = useNavigate();
+    let nav = useNavigate();
     const dispatch = useDispatch();
     const LogoutMsg = useRef(null);
-
-    function deleteData(nav){
-    // store.dispatch({type:"REFRESH",payload:{status:0,token:null,links:[]}})
-    displayOneByOne("Logout Success",LogoutMsg,45,"failed").then(()=>{
-        localStorage.removeItem("Token")
-        setTimeout(()=>{
-            nav("/")
-            dispatch(updateAuth(initState()))
-        },600)
-    }).finally(()=>{
-        setTimeout(()=>{},600)
-    })
-    }
+    const MainContRef = useRef(null);
 
     useEffect(()=>{
-            let cont = document.getElementsByClassName("MainCont")[0] ;
-            cont.classList.add("visible")
-            deleteData(Nav)
+            MainContRef.current.classList.add(styles.visible)
+            localStorage.removeItem("Token")
+            dispatch(updateAuth(initState()))
+            displayOneByOne("Logout Success",LogoutMsg,45,"failed").then(()=>{
+                setTimeout(()=>{
+                    nav("/")
+                },600)
+            })
         },[])
     return(
-    <>
-    <div className="statusBar statusBarRun"></div>
-    <div className="MainCont">
-    <h1 id="LogoutMsg" ref={LogoutMsg} style={{textAlign:"center",marginTop:"250px"}}></h1>    
+    <React.Fragment>
+    <div className={`${styles.statusBar} ${styles.statusBarRun}`}></div>
+    <div className={styles.MainCont} ref={MainContRef}>
+    <h1 id={styles.LogoutMsg} ref={LogoutMsg}></h1>    
     </div>
-    </>
+    </React.Fragment>
     )
 }
 export default LogoutUser

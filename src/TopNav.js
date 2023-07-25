@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { RefreshData } from './ApiCalls';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,7 +22,7 @@ function TopNav() {
           navigate("/SessionExpired")
         })
     }
-  }, [])
+  }, [dispatch,navigate])
   const token = auth.token;
   const picture = auth.picture;
   // console.log(auth.token)
@@ -38,7 +38,7 @@ function TopNav() {
         userCircleRef.current.id = styles.userPicture
       }
     }
-  }, [auth])
+  }, [auth,picture])
 
   function handleMouse1(event) {
     switch (event.type) {

@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef} from 'react';
 import LinksManagement from "./LinksManagement";
 import { useMediaQuery } from "react-responsive";
 import styles from './css/home.module.css'
 
 function Home() {
-    const isMobileDevice = useMediaQuery({ query: '(max-width:600px)' });
+
     //This makes the slideup effect on navigate
     const mainContRef = useRef(null);
     useEffect(() => {

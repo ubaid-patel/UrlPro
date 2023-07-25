@@ -192,3 +192,8 @@ h1{
     }
     
   }
+  /* There is only one style sfor logout component so included here  */
+  #LogoutMsg{
+    text-align: center;
+    margin-top: 250px;
+  }

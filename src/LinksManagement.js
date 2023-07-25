@@ -49,11 +49,11 @@ function LinksManagement() {
     }
     useEffect(() => {   
         setSortType(getSortType());
-    }, [sortOption])
+    }, [sortOption,getSortType])
  
     useEffect(() => {
         setAllLinks(applySorting())
-    }, [sortType])
+    }, [sortType,applySorting])
 
     const applySorting = () => {
         const links = [...alllinks];

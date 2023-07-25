@@ -4,7 +4,7 @@ import { LoginUser, GoogleSignin } from './ApiCalls';
 import { displayOneByOne } from './AppConfig';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch} from 'react-redux';
 import { updateAuth,updateLoggedIn } from './reducers/authSlice';
 import styles from './css/login.module.css';
 import { useGoogleLogin } from '@react-oauth/google';
