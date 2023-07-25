@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { GetAuth } from "../AppConfig";
 
 export const authSlice = createSlice({
     name:"auth",
@@ -18,19 +17,16 @@ export const authSlice = createSlice({
         }
     },
     reducers:{
+        updateLoggedIn:(state,action)=>{
+            state.auth.isLoggedIn = action.payload;
+        },
         updateLinks:(state,action)=>{
             state.auth.links = action.payload;
         },
-        updateName:(state,name)=>{
-            state.auth.name = name;
+        updateName:(state,action)=>{
+            state.auth.name = action.payload;
         },
         updateAuth:(state,action)=>{
-            // console.log(
-            //     "Iam from state update here is the payload \n",
-            //     action.payload,
-            //     "Here is the state \n",
-            //     state
-            // )
             state.auth = action.payload;
         },
         updateCount:(state,action)=>{
@@ -40,5 +36,5 @@ export const authSlice = createSlice({
 })
 export const selectAuth = (state)=>state.auth.auth;
 
-export const {updateLinks,updateName,updateAuth,updateCount} = authSlice.actions;
+export const {updateLinks,updateName,updateAuth,updateCount,updateLoggedIn} = authSlice.actions;
 export default authSlice.reducer;

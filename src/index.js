@@ -12,17 +12,10 @@ import LogoutUser from './Logout';
 import DashBoard from './DashBoard';
 import Settings from './Settings';
 import SendFeedback from './SendFeedback';
-import Loading from './Loading';
 import Admin from './Admin';
 import SessionExpired from './SessionExpired';
-import { RefreshData } from './ApiCalls';
-import { useNavigate } from 'react-router-dom';
-import { createStore } from 'redux';
-import LinksManagement from './LinksManagement';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
-import CancelSvg from './CancelSvg';
-import { LoginSocialGoogle } from 'reactjs-social-login';
 import { GoogleOAuthProvider } from '@react-oauth/google';
  
 
@@ -36,7 +29,6 @@ root.render(
                   <Route path="/" element={<Home/>} />
                   <Route path="/login" element={<Login/>} />
                   <Route path="/admin" element={<Admin/>} />
-                  <Route path="/loading" element={<Loading/>} />
                   <Route path="/dashboard" element={<DashBoard   />} />
                   <Route path="/settings" element={<Settings/>} />
                   <Route path="/feedback" element={<SendFeedback/>} />

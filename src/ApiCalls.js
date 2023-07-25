@@ -1,5 +1,4 @@
-import React from "react";
-import { GetAuth, displayOneByOne,GetHost } from "./AppConfig";
+import {GetHost } from "./AppConfig";
 
 function RefreshData(){
     let promise = new Promise((resolve,reject)=>{
@@ -43,7 +42,7 @@ function CreateLink(title,url){
             }
         }
         });
-        xhr.open("POST", GetHost()+"createLink?url="+url+"&title="+title+"&token="+GetAuth().token);
+        xhr.open("POST", GetHost()+"createLink?url="+url+"&title="+title+"&token="+localStorage.Token);
         xhr.send();
     }catch(error){
         reject(406,"Invalid Url")
@@ -80,14 +79,6 @@ function saveChanges(endpoint,title,url){
         xhr.addEventListener("readystatechange", function() {
         if(this.readyState === 4) {
             let response = JSON.parse(this.responseText)
-            let auth = GetAuth();
-            auth.links.forEach((link,index) => {
-                if(link.endpoint === endpoint){
-                    link.url = url
-                    link.title = title
-                }
-            });
-            localStorage.setItem("Auth",JSON.stringify(auth))
             if(this.status === 202){
                 resolve(response)
             }else{
@@ -95,7 +86,7 @@ function saveChanges(endpoint,title,url){
             }
         }
         });
-        xhr.open("PUT", GetHost()+"editLink?token="+GetAuth().token+"&endpoint="+endpoint+"&url="+url+"&title="+title);
+        xhr.open("PUT", GetHost()+"editLink?token="+localStorage.Token+"&endpoint="+endpoint+"&url="+url+"&title="+title);
         xhr.send();
     }))
 }
@@ -109,15 +100,6 @@ async function DeleteLink(endpoint){
         if(this.readyState === 4) {
             let response = JSON.parse(this.responseText);
             if(this.status === 202){
-                let data = GetAuth();
-                    let newarr =[];
-                    data.links.forEach((link,index)=>{
-                      if(link.endpoint != endpoint){
-                        newarr.push(link)
-                      }
-                    })
-                    data.links=newarr;
-                    localStorage.setItem("Auth",JSON.stringify(data))
                     resolve(response);
             }else{
                 reject(response)
@@ -125,7 +107,7 @@ async function DeleteLink(endpoint){
         }
       });
   
-      xhr.open("DELETE", GetHost() + "delete?token=" + GetAuth().token + "&endpoint=" + endpoint);
+      xhr.open("DELETE", GetHost() + "delete?token=" + localStorage.Token + "&endpoint=" + endpoint);
       xhr.send();
     });
   }
@@ -144,7 +126,7 @@ function changePassword(oldPass,newPass){
             }
         }
         });
-        xhr.open("PUT", GetHost()+"changepassword?oldPassword="+oldPass+"&token="+GetAuth().token+"&newPassword="+newPass);
+        xhr.open("PUT", GetHost()+"changepassword?oldPassword="+oldPass+"&token="+localStorage.Token+"&newPassword="+newPass);
         xhr.send();
     })
 }
@@ -230,7 +212,7 @@ function changeName(newName){
             }
         }
         });
-        xhr.open("PUT", GetHost()+"ChangeName?token="+GetAuth().token+"&newName="+newName);
+        xhr.open("PUT", GetHost()+"ChangeName?token="+localStorage.Token+"&newName="+newName);
         xhr.send();
     }))
 }
@@ -248,7 +230,7 @@ function deleteAccount(password){
             }
         }
         });
-        xhr.open("DELETE", GetHost()+"DeleteAccount?token="+GetAuth().token+"&password="+password);
+        xhr.open("DELETE", GetHost()+"DeleteAccount?token="+localStorage.Token+"&password="+password);
         xhr.send();
     }))
 }
@@ -266,7 +248,7 @@ function sendFeedback(message){
             }
         }
         });
-        xhr.open("POST", GetHost()+"sendFeedback?token="+GetAuth().token+"&message="+message);
+        xhr.open("POST", GetHost()+"sendFeedback?token="+localStorage.Token+"&message="+message);
         xhr.send();
     }))
 }

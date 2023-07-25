@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { GetAuth } from './AppConfig';
 import { RefreshData } from './ApiCalls';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAuth, updateAuth } from './reducers/authSlice';

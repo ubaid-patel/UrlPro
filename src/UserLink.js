@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { DeleteLink, saveChanges } from "./ApiCalls";
+import {saveChanges } from "./ApiCalls";
 import { useEffect, useRef, useState } from "react";
 import React from "react";
 import styles from "./css/userLinkDesktop.module.css"

@@ -1,14 +1,18 @@
 import React from 'react';
-import { displayOneByOne, GetAuth } from "./AppConfig"
+import { displayOneByOne} from "./AppConfig"
 import { useEffect,useRef } from "react"
 import { changeName, changePassword, deleteAccount } from "./ApiCalls"
 import { useNavigate } from "react-router-dom"
 import styles from './css/settings.module.css'
+import { useDispatch, useSelector } from 'react-redux';
+import { selectAuth, updateAuth, updateName } from './reducers/authSlice';
 function Settings() {
     useEffect(() => {
         MainContRef.current.classList.add(styles.visible)
     })
     const nav = useNavigate();
+    const auth = useSelector(selectAuth);
+    const dispatch = useDispatch();
     const MainContRef = useRef(null),
     nameMessageRef = useRef(null),
     passMessageRef = useRef(null),
@@ -46,9 +50,7 @@ function Settings() {
         event.target.setAttribute("disabled", true)
         changeName(name.value).then(
             (response) => {
-                let auth = GetAuth();
-                auth.name = name.value;
-                localStorage.setItem("Auth", JSON.stringify(auth))
+                 dispatch(updateName(name.value))
                 displayOneByOne(response.message, nameMessageRef, 40, "success")
             },
             (response) => {

@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { updateAuth } from "./reducers/authSlice";
-import Message from "./Message";
 function LogoutUser(){
     let Nav = useNavigate();
     const dispatch = useDispatch();

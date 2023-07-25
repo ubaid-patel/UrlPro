@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { json, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { SignupUser, sendOTP, GoogleSignin } from './ApiCalls';
 import { displayOneByOne } from './AppConfig';
 import { useGoogleLogin } from '@react-oauth/google';
 import styles from './css/signup.module.css'
-import { LoginSocialGoogle } from 'reactjs-social-login';
 import { useDispatch } from 'react-redux';
-import { updateAuth } from './reducers/authSlice';
+import { updateAuth,updateLoggedIn } from './reducers/authSlice';
 
 const Signup = () => {
   const [isOtpSent, setOtpSent] = useState(false)
@@ -129,6 +128,7 @@ const Signup = () => {
   const SignupWithGoogle = useGoogleLogin(
     {
       onSuccess: (data) => {
+        dispatch(updateLoggedIn(true))
         GoogleSignin(data.access_token).then(
           (response) => {
             dispatch(updateAuth(response))

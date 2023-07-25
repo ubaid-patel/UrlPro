@@ -4,9 +4,8 @@ import { LoginUser, GoogleSignin } from './ApiCalls';
 import { displayOneByOne } from './AppConfig';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
-import { LoginSocialGoogle } from 'reactjs-social-login';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateAuth } from './reducers/authSlice';
+import { updateAuth,updateLoggedIn } from './reducers/authSlice';
 import styles from './css/login.module.css';
 import { useGoogleLogin } from '@react-oauth/google';
 const Login = () => {
@@ -43,6 +42,7 @@ const Login = () => {
   }
   const LoginWithGoogle = useGoogleLogin({
     onSuccess: (data) => {
+      dispatch(updateLoggedIn(true));
       GoogleSignin(data.access_token).then(
         (response) => {
           dispatch(updateAuth(response));

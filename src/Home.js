@@ -1,9 +1,4 @@
-import { displayOneByOne, GetAuth } from "./AppConfig"
-import { CreateLink } from "./ApiCalls";
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { DeleteLink } from "./ApiCalls";
-import UserLink from "./UserLink";
 import LinksManagement from "./LinksManagement";
 import { useMediaQuery } from "react-responsive";
 import styles from './css/home.module.css'

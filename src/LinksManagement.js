@@ -1,4 +1,3 @@
-import { displayOneByOne, GetAuth } from "./AppConfig"
 import { CreateLink } from "./ApiCalls";
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +12,6 @@ import styles from './css/linkManagement.module.css'
 import Message from "./Message";
 
 function LinksManagement() {
-    const resultRef = useRef(null)
     const urlRef = useRef(null)
     const titleRef = useRef(null)
     const btnLoaderRef = useRef(null)
@@ -30,7 +28,6 @@ function LinksManagement() {
     const dateOptRef = useRef(null);
     const viewsOptRef = useRef(null);
 
-    const [messageType, setMessageType] = useState('SUCCESS');
     const [sortOption, setSortOption] = useState("date");
     const [sortType, setSortType] = useState("ascending");
     const [message, setMessage] = useState({ type: "", content: "", visible: false })
