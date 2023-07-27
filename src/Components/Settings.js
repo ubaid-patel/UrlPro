@@ -1,11 +1,11 @@
 import React from 'react';
-import { displayOneByOne} from "./AppConfig"
+import { displayOneByOne, initState} from "../AppConfig"
 import { useEffect,useRef } from "react"
-import { changeName, changePassword, deleteAccount } from "./ApiCalls"
+import { changeName, changePassword, deleteAccount } from "../ApiCalls"
 import { useNavigate } from "react-router-dom"
-import styles from './css/settings.module.css'
+import styles from '../css/settings.module.css'
 import { useDispatch} from 'react-redux';
-import { updateName } from './reducers/authSlice';
+import { updateAuth, updateName } from '../reducers/authSlice';
 function Settings() {
     useEffect(() => {
         MainContRef.current.classList.add(styles.visible)
@@ -72,7 +72,8 @@ function Settings() {
         deleteAccount(pass.value).then(
             (response) => {
                 displayOneByOne(response.message, deleteMessageRef, 40, "success").then(() => {
-                    nav("/Logout")
+                    dispatch(updateAuth(initState()))
+                    nav("/")
                 })
             },
             (response) => {

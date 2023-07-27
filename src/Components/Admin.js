@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux"
-import { selectAuth } from "./reducers/authSlice"
+import { selectAuth } from "../reducers/authSlice"
 import React from "react";
-import styles from './css/admin.module.css'
+import styles from '../css/admin.module.css'
 function Admin(){
     const auth = useSelector(selectAuth);
     return(

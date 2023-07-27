@@ -1,5 +1,5 @@
 {
-  "name": "urlshortner",
+  "name": "Url Pro",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -14,7 +14,6 @@
     "react-responsive": "^9.0.2",
     "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
-    "reactjs-social-login": "^2.6.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

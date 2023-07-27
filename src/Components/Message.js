@@ -1,4 +1,4 @@
-import styles from './css/message.module.css'
+import styles from '../css/message.module.css'
 import React, { useEffect, useRef } from 'react'
 function Message({ message, setMessage }) {
     const contRef = useRef(null);

@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { RefreshData } from './ApiCalls';
+import { RefreshData } from '../ApiCalls';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAuth, updateAuth } from './reducers/authSlice';
-import styles from './css/topNav.module.css'
+import { selectAuth, updateAuth } from '../reducers/authSlice';
+import styles from '../css/topNav.module.css'
 function TopNav() {
   const navigate = useNavigate();
   const auth = useSelector(selectAuth);
@@ -18,11 +18,16 @@ function TopNav() {
           dispatch(updateAuth(data))
           localStorage.setItem("Token", data.token)
         },
-        (message) => {
-          navigate("/SessionExpired")
+        (status) => {
+          if(status === 401){
+            navigate("/SessionExpired")
+          }else{
+            console.log("user Not found or invalid Token from TopNav.js")
+            navigate("/SessionExpired")
+          }
         })
     }
-  }, [dispatch,navigate])
+  }, [])
   const token = auth.token;
   const picture = auth.picture;
   // console.log(auth.token)
@@ -30,7 +35,7 @@ function TopNav() {
   //Check and display profile picture
   useEffect(() => {
     if (userCircleRef.current) {
-      if (picture === null) {
+      if (picture === null || picture === undefined) {
         userCircleRef.current.src = "static/userCircle.svg"
         userCircleRef.current.id = styles.userCircle
       } else {
@@ -68,7 +73,7 @@ function TopNav() {
   return (
     <div id={styles.TopNav}>
       <img id={styles.logo} src='static/logo.svg' alt="Logo" onClick={() => navigate('/')} />
-      {(token === undefined) ?
+      {(auth.isLoggedIn === false) ?
         <div id={styles.buttons}>
           <button className={styles.button} onClick={() => navigate('/login')}>
             Login

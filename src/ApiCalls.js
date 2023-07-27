@@ -1,4 +1,6 @@
-import {GetHost } from "./AppConfig";
+function GetHost(){
+    return(localStorage.Host)
+}
 
 function RefreshData(){
     let promise = new Promise((resolve,reject)=>{
@@ -9,13 +11,14 @@ function RefreshData(){
                 if(this.readyState === 4) {
                     let response = JSON.parse(this.responseText);
                     if(this.status === 200){
+                        localStorage.Token = response.token
                         resolve(response)
                     }else{
-                        reject(response)
+                        reject(this.status)
                     }
                 }
                 });
-                xhr.open("POST", GetHost()+"RefreshData?token="+localStorage.Token);
+                xhr.open("POST", GetHost()+"auth/refreshData?token="+localStorage.Token);
                 // console.log(GetAuth().token)
                 xhr.send();
             }catch(error){
@@ -42,7 +45,7 @@ function CreateLink(title,url){
             }
         }
         });
-        xhr.open("POST", GetHost()+"createLink?url="+url+"&title="+title+"&token="+localStorage.Token);
+        xhr.open("POST", GetHost()+"links/createLink?url="+url+"&title="+title+"&token="+localStorage.Token);
         xhr.send();
     }catch(error){
         reject(406,"Invalid Url")
@@ -59,13 +62,14 @@ return new Promise(
         if(this.readyState === 4) {
             let response = JSON.parse(this.responseText);
             if(this.status === 200){
+                localStorage.Token = response.token
                 resolve(response)
             }else{
                 reject(response)
             }
         }
         });
-        xhr.open("POST", GetHost()+"login?email="+email+"&password="+password);
+        xhr.open("POST", GetHost()+"auth/login?email="+email+"&password="+password);
         xhr.send();
     }
 )
@@ -86,7 +90,7 @@ function saveChanges(endpoint,title,url){
             }
         }
         });
-        xhr.open("PUT", GetHost()+"editLink?token="+localStorage.Token+"&endpoint="+endpoint+"&url="+url+"&title="+title);
+        xhr.open("PUT", GetHost()+"links/updateLink?token="+localStorage.Token+"&endpoint="+endpoint+"&url="+url+"&title="+title);
         xhr.send();
     }))
 }
@@ -107,7 +111,7 @@ async function DeleteLink(endpoint){
         }
       });
   
-      xhr.open("DELETE", GetHost() + "delete?token=" + localStorage.Token + "&endpoint=" + endpoint);
+      xhr.open("DELETE", GetHost()+"links/deleteLink?token=" + localStorage.Token + "&endpoint=" + endpoint);
       xhr.send();
     });
   }
@@ -126,7 +130,7 @@ function changePassword(oldPass,newPass){
             }
         }
         });
-        xhr.open("PUT", GetHost()+"changepassword?oldPassword="+oldPass+"&token="+localStorage.Token+"&newPassword="+newPass);
+        xhr.open("PUT", GetHost()+"action/changePassword?password="+oldPass+"&token="+localStorage.Token+"&newPassword="+newPass);
         xhr.send();
     })
 }
@@ -145,7 +149,7 @@ function ForgpotPassword(email,password,otp){
         }    
     }
     });
-    xhr.open("PUT", GetHost()+"forgotPassword?email="+email+"&password="+password+"&otp="+otp);
+    xhr.open("PUT", GetHost()+"recovery/resetPassword?email="+email+"&password="+password+"&otp="+otp);
     xhr.send();
     })
 }
@@ -158,13 +162,14 @@ function SignupUser(data){
     if(this.readyState === 4) {
         let response = JSON.parse(this.responseText);
         if(this.status  === 201){
+            localStorage.Token = response.token;
             resolve(response)
         }else{
             reject(response)
         }
     }
     });
-    xhr.open("POST", GetHost()+"signup?email="+data.email+"&password="+data.password+"&name="+data.name+"&otp="+data.otp);
+    xhr.open("POST", GetHost()+"auth/signup?email="+data.email+"&password="+data.password+"&name="+data.name+"&otp="+data.otp);
     xhr.send();
     })
 }
@@ -173,10 +178,9 @@ async function sendOTP(email,type){
         let xhr = new XMLHttpRequest();
         xhr.withCredentials = true;
         xhr.addEventListener("readystatechange", function() {
-        if(this.readyState === 1) {
-            setTimeout(()=>{
                 if(this.readyState === 4){
-                    let response = JSON.parse(this.responseText)
+                    alert(this.responseText)
+                    let response =this.responseText
                     if(this.status === 201){
                         resolve(response)
                     }else{
@@ -185,16 +189,11 @@ async function sendOTP(email,type){
                 }else{
                     resolve({message:"OTP sent successfully"})
                 }
-            },3000)
-            if(this.readyState === 4){
-                console.log(this.responseText)
-            }
-        }
         });
         if(type === 0){
-            xhr.open("POST", GetHost()+"sendOtp?email="+email);
+            xhr.open("POST", GetHost()+"auth/sendOtp?email="+email);
         }else{
-            xhr.open("POST", GetHost()+"userSendOtp?email="+email);
+            xhr.open("POST", GetHost()+"recovery/sendOtp?email="+email);
         }
         xhr.send();
     }))}
@@ -212,7 +211,7 @@ function changeName(newName){
             }
         }
         });
-        xhr.open("PUT", GetHost()+"ChangeName?token="+localStorage.Token+"&newName="+newName);
+        xhr.open("PUT", GetHost()+"action/changeName?token="+localStorage.Token+"&newName="+newName);
         xhr.send();
     }))
 }
@@ -230,7 +229,7 @@ function deleteAccount(password){
             }
         }
         });
-        xhr.open("DELETE", GetHost()+"DeleteAccount?token="+localStorage.Token+"&password="+password);
+        xhr.open("DELETE", GetHost()+"action/deleteAccount?token="+localStorage.Token+"&password="+password);
         xhr.send();
     }))
 }
@@ -248,7 +247,7 @@ function sendFeedback(message){
             }
         }
         });
-        xhr.open("POST", GetHost()+"sendFeedback?token="+localStorage.Token+"&message="+message);
+        xhr.open("POST", GetHost()+"action/sendFeedback?token="+localStorage.Token+"&message="+message);
         xhr.send();
     }))
 }
@@ -259,14 +258,17 @@ function GoogleSignin(accessToken) {
     xhr.withCredentials = true;
     xhr.addEventListener("readystatechange", function() {
     if(this.readyState === 4) {
-        if(this.status === 200){
-            resolve(JSON.parse(this.responseText))
+        if(this.status === 201){
+            let response = JSON.parse(this.responseText);
+            localStorage.Token = response.token
+            resolve(response)
         }else{
-            reject(JSON.parse(this.responseText))
+            let response = JSON.parse(this.responseText);
+            reject(response)
         }
     }
     });
-    xhr.open("GET", GetHost()+"GoogleSignin?accessToken="+accessToken);
+    xhr.open("POST", GetHost()+"auth/OAuth?accessToken="+accessToken);
     xhr.send();
     })
   }

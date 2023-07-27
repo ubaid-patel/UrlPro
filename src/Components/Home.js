@@ -1,7 +1,6 @@
 import { useEffect, useRef} from 'react';
 import LinksManagement from "./LinksManagement";
-import { useMediaQuery } from "react-responsive";
-import styles from './css/home.module.css'
+import styles from '../css/home.module.css'
 
 function Home() {
 

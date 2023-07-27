@@ -1,160 +1,159 @@
-.statusBar{
-    max-width: 0px;
-    height: 3px;
-    width: 100%;
-    background-color: #7dc13d;
-    position: fixed;
-    top:0px;
-    transition: 1s;
-}
-.statusBarRun{
-    animation: expand 3s infinite;
-    animation-iteration-count: 1;
+.statusBar {
+  max-width: 0px;
+  height: 3px;
+  width: 100%;
+  background-color: #7dc13d;
+  position: fixed;
+  top: 0px;
+  transition: 1s;
 }
 
-.MainCont{
-    opacity: 0;
-    transform: scale(.9);
-    transition: .3s;
-}
-.dash{
-    
-}
-.flex{
-    display: flex;
-    align-items: center;
-    justify-content: end;
-}
-.DashCards {
-    background-color: #e5ebfc7c;
-    border-radius: 20px;
-    box-shadow: 0 8px 13px 5px rgba(86,86,86,.819);
-    height: auto;
-    margin: 50px auto auto;
-    min-height: 150px;
-    padding: 20px;
-    transition: .3s;
-    width: 35%;
-}
-.DashCards:hover{
-    transform: scale(1.05);
-}
- 
-div {
-    display: block;
-}
-body {
-    font-family: Tilt Neon,cursive;
-    margin: 0;
+.statusBarRun {
+  animation: expand 3s infinite;
+  animation-iteration-count: 1;
 }
 
-h1{
-    text-align: center;
+.MainCont {
+  opacity: 0;
+  transform: scale(.9);
+  transition: .3s;
 }
- 
-.forms input[type=otp]{
-    border-radius: 0px;
-    width: 30%;
-  }
-  .forms{
-    display: block;
-    margin: auto;
-    margin-top: 100px;
-    text-align: center;
-    width: 25%;
-    padding: 20px;
-    background-color: rgba(184, 178, 178, 0.535);
-    border-radius: 10px;
-  }
-  .forms input[type=text],.forms input[type=password],.forms input[type=email] {
+
+
+
+.forms input[type=otp] {
+  border-radius: 0px;
+  width: 30%;
+}
+
+.forms {
+  display: block;
+  margin: auto;
+  margin-top: 100px;
+  text-align: center;
+  width: 300px;
+  padding: 20px;
+  background-color: rgba(184, 178, 178, 0.535);
+  border-radius: 10px;
+}
+
+.forms input[type=text],
+.forms input[type=password],
+.forms input[type=email] {
+    outline: none;
+    border: none;
+    padding-left: 5px;
+    border-bottom: 2px solid;
+    border-radius: 5px;
+    font-size: 18px;
+    color: #2c2f36;
+    background-color: #00000000;
+    margin-top: 20px;
+    width: 250px;
+    box-sizing: border-box;
+    display: inline-block;
     text-align: left;
-    width: 90%;
-    font-size: 17px;
-    margin-top: 30px;
-  }
-  .emailAndEdit,.otpAndResend{
-    position: relative;    
-  }
-  .emailAndEdit span,.otpAndResend span{
-    position: absolute;
-    bottom: 0px;
-    right: 25px;
-  }
-  .otpAndResend{
-   
-  }
-  .otpAndResend div{
-    position: absolute;
-    bottom: -20px;
-    right: 40px;
-  }
-  .otpAndResend div:last-child{
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    right:20px;
-  }
-  .smLoader {
-    display: none;
-    margin-left: 10px;
-    width: 20px;
-    height: 20px;
-    border-radius: 70%;
-    border: 5px solid rgb(147, 157, 147);
-    border-right-color: rgb(26, 24, 24);
-    background-color: none;
-    animation: loader .6s infinite linear;
+    padding-left: 10px;
+}
+
+.emailAndEdit,
+.otpAndResend {
+  position: relative;
+}
+
+.emailAndEdit span,
+.otpAndResend div {
+  position: absolute;
+  bottom: 0px;
+  right: 25px;
+  color: #475ed1;
 }
 .Links{
   color: #475ed1;
-  display: block;
 }
-.inputText{
-  outline: none;
-  border: none;
-  padding-left: 5px;
-  border-bottom: 2px solid;
-  border-radius: 5px;
-  font-size: 18px;
-  color: #2c2f36;
-  background-color: #00000000;
-  margin-top: 20px;
-  width: 250px;
-  box-sizing: border-box;
-  display: inline-block;
-  text-align:left;
-  padding-left: 10px;
+.otpAndResend {}
+
+.otpAndResend div {
+  position: absolute;
+  bottom: -20px;
+  right: 40px;
 }
-.inputText::placeholder {
+
+.otpAndResend div:last-child {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  right: 20px;
+}
+
+.showMainCont {
+  animation: showall .5s infinite forwards;
+  animation-iteration-count: 1;
+}
+
+@keyframes showall {
+  0% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.smLoader {
+  display: none;
+  margin-left: 10px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 3px dotted rgb(26, 24, 24);
+  border-right-color: rgba(255, 255, 255, 0);
+  background-color: none;
+  animation: loader .6s infinite linear;
+}
+
+@keyframes loader {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+
+  }
+}
+ 
+.forms input[type=text]::placeholder,
+.forms input[type=email]::placeholder,
+.forms input[type=otp]::placeholder
+.forms input[type=password]::placeholder  {
   color: #505768;
   font-size: inherit;
 }
-.submitBtn{
-    display: flex;
-    margin: auto;
-    height: 32px;
-    align-items: center;
-    border: 1px solid black;
-    font-size: inherit;
-    border-radius: 5px;
-    margin-top: 15px;
-    margin-bottom: 10px;
+
+.submitBtn {
+  display: flex;
+  margin: auto;
+  height: 32px;
+  align-items: center;
+  border: 1px solid black;
+  font-size: inherit;
+  border-radius: 5px;
+  margin-top: 15px;
+  margin-bottom: 10px;
 }
-.visible{
-    display: block;
+
+.visible {
+  display: block;
 }
-@keyframes loader {
-    0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-       
-      }
+
+
+
+@media only screen and (max-width: 400px) {
+  .forms {
+    width: 80%;
   }
-  @media only screen and (max-width: 600px) {
-    .forms{
-        width: 80%;
-    }
-    
-  }
+
+}

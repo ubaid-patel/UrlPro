@@ -1,10 +1,10 @@
 import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { sendOTP, ForgpotPassword } from './ApiCalls';
+import { sendOTP, ForgpotPassword } from '../ApiCalls';
 import { useNavigate } from 'react-router-dom';
-import { displayOneByOne } from './AppConfig';
+import { displayOneByOne } from '../AppConfig';
 import { useEffect } from 'react';
-import styles from './css/forgotPasssword.module.css'
+import styles from '../css/forgotPasssword.module.css'
 const ForgotPassword = () => {
   //stage is used to send otp and reset password conditionally
   const [stage, setStage] = useState(0);
@@ -25,7 +25,7 @@ const ForgotPassword = () => {
 
   //initial ui animation
   useEffect(() => {
-    MainContRef.current.classList.add("visible")
+    MainContRef.current.classList.add(styles.showMainCont)
   })
 
   // conditional disabling of inputs
@@ -71,7 +71,6 @@ const ForgotPassword = () => {
   function SendOTP() {
     sendOTP(emailRef.current.value, 1).then(
       (response) => {
-
         displayOneByOne(response.message, messageRef, 40, "success")
         submitTextRef.current = "Reset Password"
         setStage(1)
@@ -130,15 +129,15 @@ const ForgotPassword = () => {
           <h4 ref={messageRef}></h4>
           <form onSubmit={(e) => { handleSubmit(e); }}>
             <div className={styles.emailAndEdit}>
-              <input type="email" required ref={emailRef} placeholder="Email" className={styles.inputText} />
+              <input type="email" required ref={emailRef} placeholder="Email"/>
               <span onClick={() => { submitTextRef.current = "Send OTP"; setStage(0) }}>Edit</span>
             </div>
             <div className={styles.otpAndResend}>
-              <input type="text" ref={otpRef} placeholder="One-time-password" className={styles.inputText} />
+              <input type="text" ref={otpRef} placeholder="One-time-password"/>
               <div ref={resendRef} onClick={resendOTP}>Resend otp</div>
               <div className={styles.smLoader} ref={resendLoaderRef}></div>
             </div>
-            <input type="password" ref={passwordRef} placeholder="New password" className={styles.inputText} /><br />
+            <input type="password" ref={passwordRef} placeholder="New password"/><br />
             <input type="checkbox" onChange={(e) => { ToggleShowPass(e.target) }} /> Show Password
             <button type="submit" ref={submitRef} className={styles.submitBtn} >
               {submitTextRef.current}

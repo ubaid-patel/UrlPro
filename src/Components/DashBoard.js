@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
 import Admin from "./Admin";
 import LinksManagement from "./LinksManagement";
 import { useSelector } from "react-redux";
-import { selectAuth } from "./reducers/authSlice";
-import styles from './css/dashboard.module.css'
+import { selectAuth } from "../reducers/authSlice";
+import styles from '../css/dashboard.module.css'
 
 function DashBoard() {
     let navigate = useNavigate();
@@ -15,7 +15,7 @@ function DashBoard() {
 
     //the below code will perform userLoggenin checkup and some animations
     useEffect(() => {
-        
+
         if (auth.isLoggedIn || auth.token) {
             maincomp.current.classList.add(styles.visible)
         } else {
@@ -37,9 +37,7 @@ function DashBoard() {
         <React.Fragment>
             <div className={`${styles.statusBar} ${styles.statusBarRun}`}></div>
             <div className={styles.MainCont} ref={maincomp} key={"Dashboard"}>
-                {
-                    (auth.users && auth.feedbacks) ? <h1>Hi Admin</h1> : <h1>Hi {auth.name}</h1>
-                }
+                <h1>Hi {auth.name}</h1>
                 <div className={`${styles.dash} ${styles.flex}`}>
                     <div className={styles.DashCards}>
                         <h1>Total Links</h1>
@@ -49,12 +47,12 @@ function DashBoard() {
                         <h1>Total Visits</h1><h1>{countViews()}</h1>
                     </div>
                 </div>
-                <LinksManagement/>
+                <LinksManagement />
                 {
-                    (auth.users && <Admin /> )
+                    (auth.users && <Admin />)
                 }
             </div>
-            </React.Fragment>
+        </React.Fragment>
     )
 }
 export default DashBoard;

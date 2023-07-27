@@ -1,7 +1,3 @@
-function GetHost() {
-  return "http://192.168.43.160:5000/"
-}
-
 function displayOneByOne(str, ref, time, type = "success") {
   let i = 0;
 
@@ -39,7 +35,7 @@ export const initState = () => {
       // For admin useOnly
       users:undefined,
       feedbacks:undefined,
-    }
+      }
   )
 }
 
@@ -58,8 +54,5 @@ const convertDateToIST = (utcdateString) => {
 
   return (istDateString); // 7/13/2023, 6:32:28 PM
 }
-const GetLogo = () => {
-  let logo = ""
-  return (logo)
-}
-export {GetHost, displayOneByOne, convertDateToIST, GetLogo }
+
+export {displayOneByOne, convertDateToIST}

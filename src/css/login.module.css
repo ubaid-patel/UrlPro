@@ -82,7 +82,7 @@ h1{
     display: block;
     margin: auto;
     text-align: center;
-    width: 25%;
+    width:300px;
     padding: 20px;
     background-color: rgba(184, 178, 178, 0.535);
     border-radius: 10px;
@@ -93,36 +93,18 @@ h1{
     font-size: 17px;
     margin-top: 30px;
   }
-  .emailAndEdit,.otpAndResend{
-    position: relative;    
+  .submitBtn{
+    font-size: 90px;
   }
-  .emailAndEdit span,.otpAndResend span{
-    position: absolute;
-    bottom: 0px;
-    right: 25px;
-  }
-  .otpAndResend{
-   
-  }
-  .otpAndResend div{
-    position: absolute;
-    bottom: -20px;
-    right: 40px;
-  }
-  .otpAndResend div:last-child{
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    right:20px;
-  }
+
   .smLoader {
     display: none;
     margin-left: 10px;
-    width: 20px;
-    height: 20px;
-    border-radius: 70%;
-    border: 5px solid rgb(147, 157, 147);
-    border-right-color: rgb(26, 24, 24);
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 3px dotted rgb(26, 24, 24) ;
+    border-right-color:rgba(255, 255, 255, 0);
     background-color: none;
     animation: loader .6s infinite linear;
 }
@@ -134,7 +116,7 @@ h1{
     justify-content: center;
     align-items: center;
     border: 1px solid black;
-    font-size: inherit;
+    font-size: 20px;
     border-radius: 5px;
     margin-top: 15px;
     margin-bottom: 10px;
@@ -186,7 +168,7 @@ h1{
        
       }
   }
-  @media only screen and (max-width: 600px) {
+  @media only screen and (max-width: 400px) {
     .forms{
         width: 80%;
     }

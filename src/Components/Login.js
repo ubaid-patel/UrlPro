@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { LoginUser, GoogleSignin } from './ApiCalls';
-import { displayOneByOne } from './AppConfig';
+import { LoginUser, GoogleSignin } from '../ApiCalls';
+import { displayOneByOne, initState } from '../AppConfig';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import { useDispatch} from 'react-redux';
-import { updateAuth,updateLoggedIn } from './reducers/authSlice';
-import styles from './css/login.module.css';
+import { updateAuth,updateLoggedIn } from '../reducers/authSlice';
+import styles from '../css/login.module.css';
 import { useGoogleLogin } from '@react-oauth/google';
 const Login = () => {
   const loginResult = useRef(null),
@@ -26,7 +26,6 @@ const Login = () => {
     LoginUser(data.get("email"), data.get("password")).then(
       (response) => {
         loaderRef.current.classList.remove(styles.visible)
-        localStorage.setItem("Token", response.token)
         displayOneByOne(response.message, loginResult, 40, "success").then(() => {
           setTimeout(() => {
             nav("/Dashboard")
@@ -46,7 +45,6 @@ const Login = () => {
       GoogleSignin(data.access_token).then(
         (response) => {
           dispatch(updateAuth(response));
-          localStorage.Token = response.token;
         },
         (response) => {
           console.log(response.message)

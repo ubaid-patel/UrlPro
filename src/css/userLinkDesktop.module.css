@@ -138,8 +138,6 @@
 }
 .errorMessage{
   position: absolute;
-  background-color: #f8c4c4;
-  color: #5e0808;
   width: max-content;
   right: 20%;
   bottom:15px;
@@ -149,8 +147,7 @@
   font-size: small;
   border-radius: 3px;
   padding: 5px 5px 5px 10px;
-  overflow: hidden;
-  transform: scale(0);
+ 
 }
 
 .errorMessage img{

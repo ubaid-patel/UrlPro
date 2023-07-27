@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { SignupUser, sendOTP, GoogleSignin } from './ApiCalls';
-import { displayOneByOne } from './AppConfig';
+import { SignupUser, sendOTP, GoogleSignin } from '../ApiCalls';
+import { displayOneByOne } from '../AppConfig';
 import { useGoogleLogin } from '@react-oauth/google';
-import styles from './css/signup.module.css'
+import styles from '../css/signup.module.css'
 import { useDispatch } from 'react-redux';
-import { updateAuth,updateLoggedIn } from './reducers/authSlice';
+import { updateAuth,updateLoggedIn } from '../reducers/authSlice';
+import { initState } from '../AppConfig';
 
 const Signup = () => {
   const [isOtpSent, setOtpSent] = useState(false)
@@ -19,6 +20,7 @@ const Signup = () => {
     resendLoaderRef = useRef(null),
     MessageRef = useRef(null),
     formContRef = useRef(null),
+    verifyLoaderRef = useRef(null),
     obj = { name: null, password: null, email: null };
 
   //Creates a simplified Object from FormDataObject
@@ -106,6 +108,7 @@ const Signup = () => {
 
   function SignupWithOTP(event) {
     event.preventDefault();
+    verifyLoaderRef.current.classList.add(styles.visible)
     let otp = new FormData(event.target).get("otp");
     obj.otp = otp;
     SignupUser(obj).then(
@@ -114,7 +117,6 @@ const Signup = () => {
           () => {
             setTimeout(() => {
               dispatch(updateAuth(response))
-              localStorage.Token = response.Token;
               nav("/Dashboard")
             }, 1500)
           }
@@ -123,6 +125,8 @@ const Signup = () => {
       (response) => {
         displayOneByOne(response.message, MessageRef, 40, "failed")
       }
+    ).finally(
+      ()=>verifyLoaderRef.current.classList.remove(styles.visible)
     );
   }
   const SignupWithGoogle = useGoogleLogin(
@@ -132,7 +136,6 @@ const Signup = () => {
         GoogleSignin(data.access_token).then(
           (response) => {
             dispatch(updateAuth(response))
-            localStorage.Token = response.Token;
           },
           (response) => {
             console.log(response.message)
@@ -175,7 +178,7 @@ const Signup = () => {
               </button>
               <input required type="text" name="otp" placeholder="OTP" /><br />
               <div>
-                <button type="submit" className={styles.submitBtn}>Verify <div ref={loaderRef} className={styles.smLoader}></div></button>
+                <button type="submit" className={styles.submitBtn}>Verify <div ref={verifyLoaderRef} className={styles.smLoader}></div></button>
               </div>
             </form>
           )}

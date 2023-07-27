@@ -10,7 +10,7 @@ export const authSlice = createSlice({
         name:null,
         picture:null,
         token:localStorage.Token,
-        links:[{endpoint: 'URLPRO', title: 'Example Link', url: 'https://example.com', views: 0}],
+        links:[{endpoint: 'URLPRO', title: 'Example Link', url: 'https://example.com', views: 5000}],
         // For admin useOnly
         users:undefined,
         feedbacks:undefined,

@@ -1,9 +1,9 @@
-import { displayOneByOne, initState } from "./AppConfig"
+import { displayOneByOne, initState } from "../AppConfig"
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useRef } from "react";
+import React,{ useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { updateAuth } from "./reducers/authSlice";
-import styles from './css/login.module.css'
+import { updateAuth } from "../reducers/authSlice";
+import styles from '../css/login.module.css'
 function LogoutUser(){
     let nav = useNavigate();
     const dispatch = useDispatch();
@@ -11,7 +11,7 @@ function LogoutUser(){
     const MainContRef = useRef(null);
 
     useEffect(()=>{
-            MainContRef.current.classList.add(styles.visible)
+            MainContRef.current.classList.add(styles.showMainCont)
             localStorage.removeItem("Token")
             dispatch(updateAuth(initState()))
             displayOneByOne("Logout Success",LogoutMsg,45,"failed").then(()=>{

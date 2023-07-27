@@ -213,10 +213,10 @@ h1{
     max-height: 300px;
 }
 .LinksTable{
-    width: 90%;
     margin: auto;
     text-align: left;
     table-layout: fixed;
+    width: 95%;
 }
 .LinksTable,td,th{
     

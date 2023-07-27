@@ -1,2 +1,0 @@
-Slogan: "Link once, update forever."
-Description: Sick of constantly updating links? With our app, you can link once and update the destination link forever, ensuring users lead to right place

@@ -108,10 +108,12 @@
         background-color: #221e1e;
         box-shadow: 0 7px 7px rgba(54, 52, 52, .752);
         height: 90px;
-        width: 100%;
+        max-width: 100%;
+        padding:0px;
     }
 
     #logo {
+        display: inline;
         margin: auto auto auto 10px;
         max-width: 70%;
         padding-top: 10px;

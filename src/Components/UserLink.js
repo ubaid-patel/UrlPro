@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import {saveChanges } from "./ApiCalls";
+import {saveChanges } from "../ApiCalls";
 import { useEffect, useRef, useState } from "react";
 import React from "react";
-import styles from "./css/userLinkDesktop.module.css"
-import { convertDateToIST } from "./AppConfig";
+import styles from "../css/userLinkDesktop.module.css"
+import { convertDateToIST } from "../AppConfig";
+import Message from "./Message";
 function UserLink({ link, deleteLink }) {
     const nav = useNavigate();
 
@@ -13,7 +14,8 @@ function UserLink({ link, deleteLink }) {
     const linkRef = useRef(null);
     const moreOptsRef = useRef(null);
     const infoRef = useRef(null);
-    const messageRef = useRef(null)
+    const messageRef = useRef(null);
+    const [message,setMessage] = useState({visible:false,content:"",type:"error"})
 
     //Logic and state for Delete Confirmation
     const [isDelete, setDelete] = useState(false);
@@ -81,12 +83,8 @@ function UserLink({ link, deleteLink }) {
                 {/* urlInput,Errormessage  */}
                 <td className={styles.td} style={{ position: "relative" }}>
                     {/* Error message */}
-                    <div className={styles.errorMessage} ref={messageRef} onClick={() => {
-                        messageRef.current.classList.remove(styles.expandMessage)
-                    }}>
-                        Invalid url. <img src="static/close.svg" onClick={() => {
-                            messageRef.current.classList.remove(styles.expandMessage)
-                        }} />
+                    <div className={styles.errorMessage}>
+                        <Message message={message} setMessage={setMessage}></Message>
                     </div>
                     <input className={styles.input} type={"text"} ref={linkRef} defaultValue={link.url} disabled />
                 </td>
@@ -106,19 +104,23 @@ function UserLink({ link, deleteLink }) {
                             </button>
                             <button className={`${styles.actbtn} ${styles.savebtn}`} onClick={() => {
                                 const urlRegex = /^(ftp|http|https):\/\/[^ "]+\.[^ "]{2,}\/?[^\s]*$/;
-                                if (urlRegex.test(linkRef.current.value)) {
-                                    saveChanges(link.endpoint, titleRef.current.value, linkRef.current.value).then(
-                                        (response) => {
-                                            setEditable(false)
-                                            //disableing moreopts here because it is available when isEditable=false
-                                            setMoreOptsVisible(false);
-                                        },
-                                        (response) => {
-                                            nav("/SessionExpired")
-                                        }
-                                    )
-                                } else {
-                                    messageRef.current.classList.add(styles.expandMessage)
+                                if(titleRef.current.value.trim() !== ''){
+                                    if (urlRegex.test(linkRef.current.value)) {
+                                        saveChanges(link.endpoint, titleRef.current.value, linkRef.current.value).then(
+                                            (response) => {
+                                                setEditable(false)
+                                                //disableing moreopts here because it is available when isEditable=false
+                                                setMoreOptsVisible(false);
+                                            },
+                                            (response) => {
+                                                nav("/SessionExpired")
+                                            }
+                                        )
+                                    } else {
+                                       setMessage({visible:true,content:"Invalid Url",type:"error"})
+                                    }
+                                }else{
+                                    setMessage({visible:true,content:"Invalid title",type:"error"})
                                 }
 
                             }}>

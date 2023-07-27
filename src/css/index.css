@@ -2,7 +2,10 @@ body{
     background-image: url(../../public/static/5127031.jpg);
     background-size: cover;
     min-height: 100vh;
+    max-width: 100%;
+    padding-right: 0px;
     padding-bottom: 50px;
+    margin: 0px;
 }
 a{
     text-decoration: none;
@@ -12,5 +15,4 @@ a{
 ::-webkit-scrollbar{
     display: none;
 }
-
-
+ 

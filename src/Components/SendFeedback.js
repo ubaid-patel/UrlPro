@@ -1,9 +1,9 @@
 import { useEffect,useRef } from "react";
 import React from "react";
-import { sendFeedback } from "./ApiCalls";
-import { displayOneByOne } from "./AppConfig";
+import { sendFeedback } from "../ApiCalls";
+import { displayOneByOne } from "../AppConfig";
 import { useNavigate } from "react-router-dom";
-import styles from './css/sendfeedback.module.css'
+import styles from '../css/sendfeedback.module.css'
 function SendFeedback(){
     const messageRef = useRef(null),
     MainContRef = useRef(null),

@@ -13,6 +13,7 @@
 }
 .Users table{
     margin: auto;
+    width: 800px;
 }
 .Users td{
     padding: 5px;
@@ -25,4 +26,12 @@
 .FeedBacks p{
     text-align: left;
     margin-left: 50px;
+}
+@media only screen and (max-width:650px) {
+    .FeedBacks,.Users{
+        padding: 10px;
+    }
+    .Users table{
+        max-width: 50%;
+    }
 }

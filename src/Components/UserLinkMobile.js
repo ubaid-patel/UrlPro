@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { saveChanges } from "./ApiCalls";
+import { saveChanges } from "../ApiCalls";
 import React from "react";
-import styles from './css/userlinkMobile.module.css'
+import styles from '../css/userlinkMobile.module.css'
 import Message from "./Message";
 const UserLinkMobile = ({ link, deleteLink }) => {
     const nav = useNavigate();

@@ -1,8 +1,8 @@
 import React from 'react';
-import { initState } from './AppConfig';
+import { initState } from '../AppConfig';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateAuth } from './reducers/authSlice';
+import { updateAuth } from '../reducers/authSlice';
 import Login from './Login';
  
 
