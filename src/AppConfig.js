@@ -24,6 +24,7 @@ function displayOneByOne(str, ref, time, type = "success") {
 
 export const initState = () => {
   return (
+    
     {
       isLoggedIn:false,
       count:0,

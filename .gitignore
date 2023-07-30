@@ -7,6 +7,8 @@
 .hintrc
 server.json
 .gitignore
+/config
+/scripts
 
 # testing
 /coverage

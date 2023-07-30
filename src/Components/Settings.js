@@ -24,6 +24,14 @@ function Settings() {
     function handleChangePass(event){
         let newpass = nPassRef.current;
         let oldpass = cPassRef.current;
+        if(newpass.value.trim() === '' || oldpass.value.trim() === ''){
+            displayOneByOne("Passwords can't be empty",passMessageRef, 40, "failed")
+            return
+        }
+        if(newpass.value.trim() === oldpass.value.trim()){
+            displayOneByOne("Passwords can't be same",passMessageRef, 40, "failed")
+            return
+        }
         event.target.setAttribute("disabled", true)
         newpass.setAttribute("disabled", true)
         oldpass.setAttribute("disabled", true)
@@ -45,6 +53,10 @@ function Settings() {
 
     const handleChangeName =  (event) => {
         let name = newNameRef.current;
+        if(name.value.trim() === ''){
+            displayOneByOne("Name can't be empty", nameMessageRef, 40, "failed")
+            return
+        }
         name.setAttribute("disabled", true)
         event.target.setAttribute("disabled", true)
         changeName(name.value).then(
@@ -67,6 +79,10 @@ function Settings() {
 
     const handleDeleteAcc = (event) => {
         let pass = passwordToDelete.current;
+        if(pass.value.trim() === ''){
+            displayOneByOne("Password can't be empty", deleteMessageRef, 40, "failed")
+            return
+        }
         pass.setAttribute("disabled", true)
         event.target.setAttribute("disabled", true)
         deleteAccount(pass.value).then(

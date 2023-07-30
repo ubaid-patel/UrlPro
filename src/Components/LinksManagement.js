@@ -10,6 +10,32 @@ import styles from '../css/linkManagement.module.css'
 import Message from "./Message";
 import { initState } from "../AppConfig";
 
+const applySorting = (links,sortOption,sortType) => {
+    switch (sortOption) {
+        case 'date':
+            switch (sortType) {
+                case 'descending':
+                    links.sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn));
+                    break;
+                case 'ascending':
+                    links.sort((a, b) => new Date(a.createdOn) - new Date(b.createdOn));
+                    break;
+            }
+            break;
+        case 'views':
+            switch (sortType) {
+                case 'descending':
+                    links.sort((a, b) => a.views - b.views)
+                    break;
+                case 'ascending':
+                    links.sort((a, b) => b.views - a.views)
+                    break;
+            }
+            break;
+    }
+    return (links)
+}
+
 function LinksManagement() {
     const urlRef = useRef(null)
     const titleRef = useRef(null)
@@ -17,24 +43,28 @@ function LinksManagement() {
     const messageRef = useRef(null),
         dateArrowRef = useRef(null),
         searchInpRef = useRef(null),
-        viewsArrowRef = useRef(null);
+        viewsArrowRef = useRef(null),
+        dateOptRef = useRef(null),
+        sortOptsRef = useRef(null),
+        sortContRef = useRef(null),
+        viewsOptRef = useRef(null);
+    
+    //Message dialoge state
+    const [message, setMessage] = useState({ type: "", content: "", visible: false })
 
     //check device
     const isMobileDevice = useMediaQuery({ query: '(max-width:600px)' });
-
+    
+    //Gets auth and dispatch
     const auth = useSelector(selectAuth);
-    const [alllinks, setAllLinks] = useState([...auth.links]);
-
     const dispatch = useDispatch();
-    const dateOptRef = useRef(null);
-    const viewsOptRef = useRef(null);
 
+    //Copys links from auth to sort and search
+    const [alllinks, setAllLinks] = useState(applySorting([...auth.links],'date','ascending'));
     const [sortOption, setSortOption] = useState("date");
     const [sortType, setSortType] = useState("ascending");
-    const [message, setMessage] = useState({ type: "", content: "", visible: false })
-    useEffect(() => {
-        setAllLinks(auth.links)
-    }, [auth])
+    
+    
     function getSortType() {
         let elem;
         if (sortOption === 'date') {
@@ -49,42 +79,35 @@ function LinksManagement() {
         }
     }
     useEffect(() => {
-        setSortType(getSortType());
-    }, [sortOption, getSortType])
+        if(alllinks.length>1){
+            console.log(alllinks)
+            if (getSortType() === sortType) {
+                setAllLinks(applySorting([...auth.links],sortOption,sortType))
+            } else {
+                setSortType(getSortType());
+            }
+        }
+    }, [sortOption])
 
     useEffect(() => {
-        setAllLinks(applySorting())
-    }, [sortType])
-    useEffect(
-        () => { setAllLinks(applySorting()) }
-        , [])
-
-    const applySorting = () => {
-        const links = [...alllinks];
-        switch (sortOption) {
-            case 'date':
-                switch (sortType) {
-                    case 'descending':
-                        links.sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn));
-                        break;
-                    case 'ascending':
-                        links.sort((a, b) => new Date(a.createdOn) - new Date(b.createdOn));
-                        break;
-                }
-                break;
-            case 'views':
-                switch (sortType) {
-                    case 'descending':
-                        links.sort((a, b) => a.views - b.views)
-                        break;
-                    case 'ascending':
-                        links.sort((a, b) => b.views - a.views)
-                        break;
-                }
-                break;
+        if(alllinks.length>1){
+            console.log(alllinks)
+            setAllLinks(applySorting([...auth.links],sortOption,sortType))
         }
-        return (links)
-    }
+    }, [sortType])
+
+    useEffect(() => {
+        if(auth.links.length>1){
+            setAllLinks(applySorting([...auth.links],sortOption,sortType))
+        }
+        if(!localStorage.Token){
+            localStorage.Links = JSON.stringify(auth.links)
+        }
+    }, [auth])
+
+    useEffect(()=>{
+        setAllLinks(applySorting([...auth.links],sortOption,sortType))
+    },[auth.links])
     function PerformSearch(event) {
         let word = event.target.value.trim().toLowerCase();
         let links = [...auth.links]
@@ -151,7 +174,7 @@ function LinksManagement() {
                             if (response.status === 401) {
                                 Nav("/SessionExpired")
                             } else {
-                                setMessage({ type: "error", content: "Server down", visible: true });
+                                setMessage({ type: "error", content: "Something went wrong", visible: true });
                             }
                         }
                     ).finally(
@@ -185,8 +208,14 @@ function LinksManagement() {
         }
     }
     function toggleShowOpts() {
-        dateOptRef.current.classList.toggle(styles.showSortOption)
-        viewsOptRef.current.classList.toggle(styles.showSortOption)
+        if(sortOptsRef.current.classList.contains(styles.showSortOptions)){
+            setTimeout(()=>{
+                sortContRef.current.classList.remove(styles.visible)
+            },500)
+        }else{
+            sortContRef.current.classList.add(styles.visible)
+        }
+        sortOptsRef.current.classList.toggle(styles.showSortOptions)
     }
 
     return (
@@ -225,7 +254,8 @@ function LinksManagement() {
                         <input type="text" ref={searchInpRef} placeholder="search" onChange={PerformSearch} />
                     </div>
                     <img src="static/sort.svg" className={styles.sort} onClick={toggleShowOpts} />
-                    <div className={styles.sortOptions}>
+                    <div className={styles.sortCont} ref={sortContRef}>
+                        <div className={styles.sortOptions} ref={sortOptsRef}>
                         <div className={styles.sortOption} ref={dateOptRef}>
                             <input type="radio" name="sort" onClick={() => { setSortOption("date") }} defaultChecked />
                             <span>Date</span>
@@ -236,22 +266,23 @@ function LinksManagement() {
                             <span>Views</span>
                             <img src="static/upwardArrow.svg" ref={viewsArrowRef} className={styles.upwardArrow} onClick={() => { sortLinks("fromViews") }} />
                         </div>
+                        </div>
                     </div>
                 </div>
 
                 <table className={styles.LinksTable}>
                     <tbody>
-                        {/** Rendering links based on device and links length and search active**/
-                            (alllinks.length === 0) ? 
-                                (searchInpRef.current.value.trim() == '') ? 
-                                    (isMobileDevice) 
-                                        ?<UserLinkMobile key={'EXMPL'} link={initState().links[0]} deleteLink={deleteLink}></UserLinkMobile>
-                                        : <UserLink key={'EXMPL'} link={initState().links[0]} deleteLink={deleteLink}></UserLink>
+                             {/** Rendering links based on device and links length and search active**/
+                            (alllinks.length === 0) ?
+                            (searchInpRef.current == null || searchInpRef.current.value.trim() == '') ?
+                                (isMobileDevice)
+                                    ? <UserLinkMobile key={'EXMPL'} link={initState().links[0]} deleteLink={deleteLink}></UserLinkMobile>
+                                    : <UserLink key={'EXMPL'} link={initState().links[0]} deleteLink={deleteLink}></UserLink>
                                 : <tr><td colSpan={2}><h3>No Links Found</h3></td></tr>
-                            :(isMobileDevice) ?
-                                    alllinks.map((link, index) => <UserLinkMobile key={link.endpoint} link={link} deleteLink={deleteLink}></UserLinkMobile>)
-                                    : alllinks.map((link, index) => <UserLink key={link.endpoint} link={link} deleteLink={deleteLink}></UserLink>)
-                        }
+                            : (isMobileDevice) ?
+                                alllinks.map((link, index) => <UserLinkMobile key={link.endpoint} link={link} deleteLink={deleteLink}></UserLinkMobile>)
+                                : alllinks.map((link, index) => <UserLink key={link.endpoint} link={link} deleteLink={deleteLink}></UserLink>)
+                }
                     </tbody>
                 </table>
             </div>

@@ -142,6 +142,7 @@
   right: 20%;
   bottom:15px;
   height: 70%;
+  display: none;
   width: 40%;
   text-align: left;
   font-size: small;
@@ -149,7 +150,9 @@
   padding: 5px 5px 5px 10px;
  
 }
-
+.visible{
+  display: block;
+}
 .errorMessage img{
   float: right;
   position: relative;

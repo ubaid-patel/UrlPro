@@ -12,6 +12,9 @@
     padding-left: 10px;
     width: 97%;
 }
+.visible{
+    display: block;
+}
 
 .errorMessage{
     position: absolute;
@@ -23,7 +26,10 @@
     text-align: left;
     font-size: small;
     border-radius: 3px;
-    padding: 5px 5px 5px 10px;   
+    padding: 5px 5px 5px 10px;  
+}
+.visible{
+    display: block;
 }
 .sortOption span{
     color: black;

@@ -62,7 +62,7 @@
   margin-bottom:0px;
 }
 .visible{
-    display: block;
+    display: block !important;
 }
 @media only screen and (max-width: 600px) {
     .message{
@@ -82,8 +82,8 @@
     transform: scale(1);
 }
 
-.errorMessage button{
-
+.errorMessage{
+    z-index: 0;
 }
 .error{
     background-color: #f8c4c4;
@@ -248,19 +248,21 @@ h1{
     }
 }
 
-
-.sortOptions{
-    width: max-content;
-    height: max-content;
+.sortCont{
     position: absolute;
     right:0px;
     top: 40px;
+    width: max-content;
+    height: max-content;
+    overflow-y: hidden;
+    display: none;
+    z-index: 200;
+}
+.sortOptions{
     display: none;
     transition: 2s;
     display: block;
-    overflow-y: hidden;
-    z-index: 100;
-     
+    animation: goingUp 0.4s linear 0s 1 normal forwards;
 }
 @keyframes goingDown {
     0%{   
@@ -283,12 +285,10 @@ h1{
     flex-direction: row;
     align-items: center;
    justify-content: center;
-   
    border-radius: 2px;
    transition: 0.4s;
-   animation: goingUp 0.4s linear 0s 1 normal forwards;
 }
-.showSortOption{
+.showSortOptions{
     animation: goingDown 0.4s linear 0s 1 normal forwards;
 }
 

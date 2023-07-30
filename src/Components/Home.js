@@ -66,7 +66,7 @@ function Home() {
                     <div>
                         <h1>Open-Source URL Shortening Made Simple</h1>
                         <h3>Say goodbye to complex and confusing URL shortening services. With our open-source platform,
-                            you can easily create and manage your links with complete transparency. Checkout <a style={{ fontWeight: "bold", color: "#0000ffb9" }} href="https://github.com/ubaidpatel595/urlpro.git">Here!</a></h3>
+                            you can easily create and manage your links with complete transparency. Checkout <a style={{ fontWeight: "bold", color: "#0000ffb9" }} href="https://github.com/ubaidpatel595">Here!</a></h3>
                     </div>
                     <img src="/static/github-mark.png"></img>
                 </div>

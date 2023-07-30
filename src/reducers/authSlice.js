@@ -1,4 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { json } from "react-router-dom";
+function getLinks(){
+    if(localStorage.Token){
+      return[]
+    }else{
+      if(localStorage.Links){
+        return JSON.parse(localStorage.Links)
+      }else{
+        return[]
+      }
+    }
+  }
 
 export const authSlice = createSlice({
     name:"auth",
@@ -10,7 +22,7 @@ export const authSlice = createSlice({
         name:null,
         picture:null,
         token:localStorage.Token,
-        links:[{endpoint: 'URLPRO', title: 'Example Link', url: 'https://example.com', views: 5000}],
+        links:getLinks(),
         // For admin useOnly
         users:undefined,
         feedbacks:undefined,

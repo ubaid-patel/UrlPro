@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { RefreshData } from '../ApiCalls';
+import { RefreshData, RefreshLinks } from '../ApiCalls';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAuth, updateAuth } from '../reducers/authSlice';
+import { selectAuth, updateAuth, updateLinks } from '../reducers/authSlice';
 import styles from '../css/topNav.module.css'
+import { response } from 'express';
+import { initState } from '../AppConfig';
 function TopNav() {
   const navigate = useNavigate();
   const auth = useSelector(selectAuth);
@@ -26,6 +28,14 @@ function TopNav() {
             navigate("/SessionExpired")
           }
         })
+    }else if(localStorage.Links){
+      RefreshLinks().then(
+        (response)=>{
+          localStorage.setItem(JSON.stringify(response.links));
+          dispatch(updateLinks(response.links))
+        },
+        (response)=>{}
+      )
     }
   }, [])
   const token = auth.token;

@@ -16,6 +16,15 @@ function UserLink({ link, deleteLink }) {
     const infoRef = useRef(null);
     const messageRef = useRef(null);
     const [message,setMessage] = useState({visible:false,content:"",type:"error"})
+    useEffect(()=>{
+        if(messageRef.current !== null){
+            if(message.visible){
+                messageRef.current.classList.add(styles.visible)
+            }else{
+                messageRef.current.classList.remove(styles.visible)
+            }
+        }
+    },[message])
 
     //Logic and state for Delete Confirmation
     const [isDelete, setDelete] = useState(false);
@@ -83,7 +92,7 @@ function UserLink({ link, deleteLink }) {
                 {/* urlInput,Errormessage  */}
                 <td className={styles.td} style={{ position: "relative" }}>
                     {/* Error message */}
-                    <div className={styles.errorMessage}>
+                    <div className={styles.errorMessage} ref={messageRef}>
                         <Message message={message} setMessage={setMessage}></Message>
                     </div>
                     <input className={styles.input} type={"text"} ref={linkRef} defaultValue={link.url} disabled />
