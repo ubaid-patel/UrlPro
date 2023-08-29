@@ -18,7 +18,7 @@ Make every click count. URLPro's destination management capabilities ensure that
 Gather insights into link engagement using URLPro's comprehensive analytics. Track click-through rates, referral sources, and geographic data to fine-tune your strategies and maximize your online reach.
 
 ## Getting Started
-Visit [https://urlpro.vercel.com](https://urlpro.vercel.com) 
+Visit [https://urlpro.vercel.com](https://urlpro.vercel.app) 
 
 **Shorten:** Paste your long URL into URLPro's user-friendly interface and watch it transform into a compact link instantly.
 
