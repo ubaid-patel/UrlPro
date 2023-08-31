@@ -1,7 +1,7 @@
 
 # URLPro: Your Ultimate URL Shortener app
 
-Welcome to URLPro api , that combines the convenience of URL shortening with the power to manage your destination URLs dynamically. With URLPro, you're in complete control, ensuring that your audience always lands on the right content, thus maximizing your online impact. Say goodbye to unwieldy long links and say hello to simplicity, customization, and optimization.
+Welcome to URLPro , that combines the convenience of URL shortening with the power to manage your destination URLs dynamically. With URLPro, you're in complete control, ensuring that your audience always lands on the right content, thus maximizing your online impact. Say goodbye to unwieldy long links and say hello to simplicity, customization, and optimization.
 
 ## Key Features
 
